@@ -220,33 +220,46 @@ sed -i "s/--color-yellow: #[0-9a-fA-F]*/--color-yellow: $C_YELLOW/" index.html
 echo "  $MSG_OK"
 echo ""
 
-# ── Instructions ─────────────────────────────────────────────────────────
-if [ "$L" = "ru" ]; then
-    cat <<'INSTRU'
-  ─── Дальнейшие действия ───
+# ── Docker compose: auto volume + restart ──────────────────────────────
+DC_FILE=""
+for f in docker-compose.yml compose.yml; do
+    [ -f "$f" ] && DC_FILE="$f" && break
+done
 
-  1. Проверь volume mount в docker-compose.yml:
+if [ -n "$DC_FILE" ]; then
+    SERVICE=$(grep -E '^  [a-zA-Z0-9_-]*:' "$DC_FILE" | sed 's/^  //;s/://' | grep -i subscri | head -1)
+    [ -z "$SERVICE" ] && SERVICE=$(docker ps --format '{{.Names}}' | grep subscri | head -1)
+    [ -z "$SERVICE" ] && SERVICE="remnawave-subscription-page"
 
-       volumes:
-         - ./index.html:/opt/app/frontend/index.html
+    if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC_FILE"; then
+        LINE=$(awk "/^  $SERVICE:/{print NR; exit}" "$DC_FILE" 2>/dev/null)
+        if [ -n "$LINE" ]; then
+            {
+                head -n "$LINE" "$DC_FILE"
+                echo "    volumes:"
+                echo "      - ./index.html:/opt/app/frontend/index.html"
+                tail -n +$((LINE + 1)) "$DC_FILE"
+            } > "${DC_FILE}.tmp" && mv "${DC_FILE}.tmp" "$DC_FILE"
+            echo "  → Volume mount добавлен в $DC_FILE"
+        else
+            echo "  → Сервсис '$SERVICE' не найден в $DC_FILE, добавь volume mount вручную"
+        fi
+    fi
 
-  2. Перезапусти контейнер:
-
-       docker compose restart remnawave-subscription-page
-
-INSTRU
+    echo "  → Перезапускаю контейнер..."
+    docker compose restart "$SERVICE" 2>/dev/null || docker restart "$SERVICE" 2>/dev/null && echo "  ✓ Контейнер перезапущен" || echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose restart $SERVICE"
 else
-    cat <<'INSTRU'
-  ─── Next steps ───
-
-  1. Verify volume mount in docker-compose.yml:
-
-       volumes:
-         - ./index.html:/opt/app/frontend/index.html
-
-  2. Restart container:
-
-       docker compose restart remnawave-subscription-page
-
-INSTRU
+    if [ "$L" = "ru" ]; then
+        echo "  docker-compose.yml не найден."
+        echo "  Добавь volume mount вручную:"
+        echo "    volumes:"
+        echo "      - ./index.html:/opt/app/frontend/index.html"
+        echo "  И перезапусти: docker compose restart remnawave-subscription-page"
+    else
+        echo "  docker-compose.yml not found."
+        echo "  Add volume mount manually:"
+        echo "    volumes:"
+        echo "      - ./index.html:/opt/app/frontend/index.html"
+        echo "  Then restart: docker compose restart remnawave-subscription-page"
+    fi
 fi
