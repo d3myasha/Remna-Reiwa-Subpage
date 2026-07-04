@@ -2,7 +2,9 @@
 set -euo pipefail
 
 # Redirect stdin to terminal for curl | bash compatibility
-exec < /dev/tty
+if [ ! -t 0 ] && [ -e /dev/tty ]; then
+    exec < /dev/tty
+fi
 
 # ═══════════════════════════════════════════════════════════════════════════
 # Remna Reiwa Subpage — Setup Script
