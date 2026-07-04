@@ -68,9 +68,12 @@
 
 ## 🚀 Быстрая установка
 
+> **Важно:** Все команды выполняются в директории `/opt/remnawave/subscription/` (или там, где находится ваш `docker-compose.yml`)
+
 ### Одна строка (интерактивно)
 
 ```bash
+cd /opt/remnawave/subscription/
 curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh
 ```
 
