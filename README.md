@@ -5,7 +5,7 @@
 <h1 align="center">Remna Reiwa Subpage</h1>
 
 <p align="center">
-  <b>Subscription information page for <a href="https://remnawave.xyz">RemnaWave</a> panel</b><br>
+  <b>Subscription information page for <a href="https://docs.rw">RemnaWave</a> panel</b><br>
   Доработанная страница подписки с WebGL2 warp-шейдером, адаптивным дизайном и тёмной темой.
 </p>
 
