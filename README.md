@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="assets/banner.png" alt="Remna Reiwa Subpage" width="800">
-</p>
-
 <h1 align="center">Remna Reiwa Subpage</h1>
 
 <p align="center">
@@ -22,22 +18,19 @@
 - **QR Code** — быстрая ссылка на подписку
 - **Application Guides** — встроенные инструкции по настройке для всех платформ
 - **Responsive** — адаптивная вёрстка, работает на мобильных
-- **Dark / Light Theme** — переключение темы
 - **Multi-language** — поддержка нескольких языков
 
 ---
 
 ## 📸 Скриншоты
 
-> Вставь сюда свои скриншоты (замени плейсхолдеры)
-
 | Collapsed Card | Expanded Card |
 |---|---|
-| <img src="assets/screenshot-collapsed.png" alt="Collapsed" width="360"> | <img src="assets/screenshot-expanded.png" alt="Expanded" width="360"> |
+| <img src="assets/subpage-collapsed.png" alt="Collapsed" width="360"> | <img src="assets/subpage-expanded.png" alt="Expanded" width="360"> |
 
-| Installation Guides | Dark Theme |
-|---|---|
-| <img src="assets/screenshot-guides.png" alt="Guides" width="360"> | <img src="assets/screenshot-dark.png" alt="Dark" width="360"> |
+| Full Page |
+|---|
+| <img src="assets/subpage.png" alt="Full Page" width="720"> |
 
 ---
 
