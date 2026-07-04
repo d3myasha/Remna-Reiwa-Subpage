@@ -70,18 +70,18 @@
 
 ### Одна строка (интерактивно)
 
-\`\`\`bash
+```bash
 curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh
-\`\`\`
+```
 
 ### Неинтерактивно (с выбором темы)
 
-\`\`\`bash
+```bash
 bash setup.sh -t 3              # Тема Cyberpunk
 bash setup.sh -t 2 -l ru        # Тема Monochrome + русский язык
-\`\`\`
+```
 
-**Доступные темы:** \`1\` Purple • \`2\` Monochrome • \`3\` Cyberpunk • \`4\` Emerald • \`5\` Amber • \`6\` Ocean
+**Доступные темы:** `1` Purple • `2` Monochrome • `3` Cyberpunk • `4` Emerald • `5` Amber • `6` Ocean
 
 ---
 
@@ -90,40 +90,40 @@ bash setup.sh -t 2 -l ru        # Тема Monochrome + русский язык
 <details>
 <summary><b>Развернуть инструкции по ручной установке</b></summary>
 
-### 1. Скачай \`index.html\`
+### 1. Скачай `index.html`
 
-\`\`\`bash
+```bash
 # Через curl
-curl -L -o /opt/remnawave/subscription/index.html \\
+curl -L -o /opt/remnawave/subscription/index.html \
   https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
 
 # Или через wget
-wget -O /opt/remnawave/subscription/index.html \\
+wget -O /opt/remnawave/subscription/index.html \
   https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
-\`\`\`
+```
 
-### 2. Добавь volume mount в \`docker-compose.yml\`
+### 2. Добавь volume mount в `docker-compose.yml`
 
-\`\`\`yaml
+```yaml
 services:
   remnawave-subscription-page:
     volumes:
       - ./index.html:/opt/app/frontend/index.html
-\`\`\`
+```
 
 ### 3. Перезапусти контейнер
 
-\`\`\`bash
+```bash
 docker compose restart remnawave-subscription-page
-\`\`\`
+```
 
 **Структура директории:**
-\`\`\`
+```
 /opt/remnawave/subscription/
 ├── docker-compose.yml
 ├── .env
 └── index.html
-\`\`\`
+```
 
 </details>
 
@@ -133,15 +133,15 @@ docker compose restart remnawave-subscription-page
 
 | № | Тема | Основной | Дополнительный | Описание |
 |:-:|---|---|---|---|
-| **1** | **Purple** | \`#c084fc\` | — | Фиолетовая тема с тёмным градиентом (по умолчанию) |
-| **2** | **Monochrome** | \`#e0e0e0\` | — | Минималистичная серая тема |
-| **3** | **Cyberpunk** | \`#ff2d78\` | \`#00d4ff\` | Ярко-розовый + циановый неон |
-| **4** | **Emerald** | \`#34d399\` | — | Зелёная/изумрудная природная тема |
-| **5** | **Amber** | \`#f59e0b\` | — | Тёплая оранжево-жёлтая тема |
-| **6** | **Ocean** | \`#60a5fa\` | — | Глубокая сине-индиго тема |
+| **1** | **Purple** | `#c084fc` | — | Фиолетовая тема с тёмным градиентом (по умолчанию) |
+| **2** | **Monochrome** | `#e0e0e0` | — | Минималистичная серая тема |
+| **3** | **Cyberpunk** | `#ff2d78` | `#00d4ff` | Ярко-розовый + циановый неон |
+| **4** | **Emerald** | `#34d399` | — | Зелёная/изумрудная природная тема |
+| **5** | **Amber** | `#f59e0b` | — | Тёплая оранжево-жёлтая тема |
+| **6** | **Ocean** | `#60a5fa` | — | Глубокая сине-индиго тема |
 
 **Что меняет скрипт:**
-- Основной цвет (\`--primary-color\`)
+- Основной цвет (`--primary-color`)
 - Градиент фона (3 слоя + свечение)
 - Цвета warp-шейдера (4 цвета)
 - Meta theme-color
@@ -154,18 +154,18 @@ docker compose restart remnawave-subscription-page
 <details>
 <summary><b>Расширенные настройки: параметры warp-шейдера</b></summary>
 
-Редактируй вызов \`initWarpEffect()\` в \`index.html\`:
+Редактируй вызов `initWarpEffect()` в `index.html`:
 
 | Параметр | По умолчанию | Описание |
 |---|---|---|
-| \`speed\` | \`0.8\` | Скорость анимации |
-| \`proportion\` | \`0.55\` | Пропорция смешивания цветов |
-| \`distortion\` | \`0.12\` | Сила искажения шума |
-| \`swirl\` | \`1.0\` | Интенсивность завихрений |
-| \`swirlIterations\` | \`13\` | Количество итераций завихрения |
-| \`shape\` | \`1\` | Тип узора (0=сетка, 1=полосы, 2=край) |
-| \`softness\` | \`0.8\` | Мягкость цветовых переходов |
-| \`colors\` | \`[[R,G,B], ...]\` | Массив цветов палитры |
+| `speed` | `0.8` | Скорость анимации |
+| `proportion` | `0.55` | Пропорция смешивания цветов |
+| `distortion` | `0.12` | Сила искажения шума |
+| `swirl` | `1.0` | Интенсивность завихрений |
+| `swirlIterations` | `13` | Количество итераций завихрения |
+| `shape` | `1` | Тип узора (0=сетка, 1=полосы, 2=край) |
+| `softness` | `0.8` | Мягкость цветовых переходов |
+| `colors` | `[[R,G,B], ...]` | Массив цветов палитры |
 
 </details>
 
@@ -173,7 +173,7 @@ docker compose restart remnawave-subscription-page
 
 ## 📋 Требования
 
-- **Панель RemnaWave** — страница использует серверный рендеринг (\`<%= ... %>\`)
+- **Панель RemnaWave** — страница использует серверный рендеринг (`<%= ... %>`)
 - **Docker** — для развёртывания в контейнере
 - **Современный браузер** — требуется поддержка WebGL2
 
