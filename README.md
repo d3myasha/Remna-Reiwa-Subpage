@@ -15,7 +15,7 @@
 
 <p align="center">
   <b>⚡ Быстрая установка:</b>
-  <code>curl -L -s https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh | bash</code>
+  <code>curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh -t 3</code>
 </p>
 
 ---
