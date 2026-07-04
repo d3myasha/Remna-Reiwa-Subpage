@@ -221,14 +221,11 @@ echo "  $MSG_OK"
 echo ""
 
 # ── Docker compose: add volume & restart ────────────────────────────
-echo "=== DOCKER BEGIN ==="
 if [ -f docker-compose.yml ]; then DC="docker-compose.yml"
 elif [ -f compose.yml ]; then DC="compose.yml"
 else DC=""; fi
 
 if [ -n "$DC" ]; then
-    echo "  [DEBUG] DC=$DC"
-
     if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC" 2>/dev/null; then
         LINE=$(grep -n '^    [a-zA-Z0-9_-]*:' "$DC" 2>/dev/null | head -1 | cut -d: -f1)
         if [ -n "$LINE" ]; then
@@ -246,8 +243,8 @@ if [ -n "$DC" ]; then
     docker compose up -d
     echo "  ✓ Контейнер перезапущен"
 else
-    echo "  docker-compose.yml не найден."
-    echo "  Добавь volume mount: volumes: - ./index.html:/opt/app/frontend/index.html"
+    echo "  docker-compose.yml не найден. Добавь volume mount и перезапусти вручную:"
+    echo "    volumes:"
+    echo "      - ./index.html:/opt/app/frontend/index.html"
     echo "  docker compose down && docker compose up -d"
 fi
-echo "=== DOCKER END ==="
