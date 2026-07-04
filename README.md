@@ -1,80 +1,123 @@
-<p align="center">
-  <img src="assets/demo.gif" alt="Remna Reiwa Subpage" width="800">
-</p>
+<div align="center">
 
-<h1 align="center">Remna Reiwa Subpage</h1>
+![Demo](assets/demo.gif)
 
-<p align="center">
-  <b>Subscription information page for <a href="https://docs.rw">RemnaWave</a> panel</b><br>
-  Доработанная страница подписки с WebGL2 warp-шейдером, адаптивным дизайном и тёмной темой.
-</p>
+# 🌊 Remna Reiwa Subpage
 
-<p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
-</p>
+**Subscription page for [RemnaWave](https://docs.rw) with WebGL2 warp shader**
 
-<p align="center">
-  <b>⚡ Быстрая установка:</b>
-  <code>curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh</code>
-</p>
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![RemnaWave](https://img.shields.io/badge/RemnaWave-Panel-purple.svg)](https://docs.rw)
+
+</div>
 
 ---
 
 ## ✨ Features
 
-- **WebGL2 Warp Effect** — динамический шейдерный фон на карточке пользователя (портирован с @paper-design/shaders)
-- **Subscription Info** — статус, срок действия, трафик, имя пользователя
-- **QR Code** — быстрая ссылка на подписку
-- **Application Guides** — встроенные инструкции по настройке для всех платформ
-- **Responsive** — адаптивная вёрстка, работает на мобильных
-- **Multi-language** — поддержка нескольких языков
+<table>
+<tr>
+<td width="50%">
+
+### 🎨 Visual
+- **WebGL2 Warp Shader** — dynamic animated background
+- **6 Built-in Themes** — Purple, Monochrome, Cyberpunk, Emerald, Amber, Ocean
+- **Responsive Design** — works on mobile & desktop
+- **Dark Mode** — optimized for dark theme
+
+</td>
+<td width="50%">
+
+### 📊 Functional
+- **Subscription Info** — status, expiry, traffic, username
+- **QR Code** — quick subscription link
+- **App Guides** — setup instructions for all platforms
+- **Multi-language** — i18n support
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🎨 Темы
+## 🎨 Themes
 
-| Purple | Monochrome |
-|---|---|
-| <img src="assets/Purple.png" alt="Purple" width="360"> | <img src="assets/Monochrome.png" alt="Monochrome" width="360"> |
+<div align="center">
 
-| Cyberpunk | Emerald |
-|---|---|
-| <img src="assets/Cyberpunk.png" alt="Cyberpunk" width="360"> | <img src="assets/Emerald.png" alt="Emerald" width="360"> |
+### Purple (Default)
+<img src="assets/Purple.png" alt="Purple Theme" width="700">
 
-| Amber | Ocean |
-|---|---|
-| <img src="assets/Amber.png" alt="Amber" width="360"> | <img src="assets/Ocean.png" alt="Ocean" width="360"> |
+### Monochrome
+<img src="assets/Monochrome.png" alt="Monochrome Theme" width="700">
+
+### Cyberpunk
+<img src="assets/Cyberpunk.png" alt="Cyberpunk Theme" width="700">
+
+### Emerald
+<img src="assets/Emerald.png" alt="Emerald Theme" width="700">
+
+### Amber
+<img src="assets/Amber.png" alt="Amber Theme" width="700">
+
+### Ocean
+<img src="assets/Ocean.png" alt="Ocean Theme" width="700">
+
+</div>
 
 ---
 
-## 🚀 Установка
+## 🚀 Quick Start
 
-Скрипт установки скачает index.html, предложит выбрать язык и тему:
+### One-line install (interactive)
 
 ```bash
 curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh
 ```
 
-Или одной строкой (неинтерактивно, с выбором темы сразу):
+### Non-interactive (specify theme)
 
 ```bash
-curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh -t 3
+bash setup.sh -t 3              # Cyberpunk theme
+bash setup.sh -t 2 -l ru        # Monochrome theme + Russian language
 ```
 
-Где `-t` — номер темы (1-6).
+**Available themes:** `1` Purple • `2` Monochrome • `3` Cyberpunk • `4` Emerald • `5` Amber • `6` Ocean
 
-Или вручную: скачай файл в директорию подписки:
+---
+
+## 📦 Manual Installation
+
+<details>
+<summary><b>Click to expand manual installation steps</b></summary>
+
+### 1. Download `index.html`
 
 ```bash
-# Через wget
-wget -O /opt/remnawave/subscription/index.html https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
+# Using curl
+curl -L -o /opt/remnawave/subscription/index.html \
+  https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
 
-# Или через curl
-curl -L -o /opt/remnawave/subscription/index.html https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
+# Or using wget
+wget -O /opt/remnawave/subscription/index.html \
+  https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
 ```
 
-После скачивания структура будет такой:
+### 2. Add volume mount to `docker-compose.yml`
 
+```yaml
+services:
+  remnawave-subscription-page:
+    volumes:
+      - ./index.html:/opt/app/frontend/index.html
+```
+
+### 3. Restart container
+
+```bash
+docker compose restart remnawave-subscription-page
+```
+
+**Directory structure:**
 ```
 /opt/remnawave/subscription/
 ├── docker-compose.yml
@@ -82,69 +125,70 @@ curl -L -o /opt/remnawave/subscription/index.html https://raw.githubusercontent.
 └── index.html
 ```
 
-2. Volume mount в `docker-compose.yml` (или проверь что он уже есть):
-
-```yaml
-volumes:
-  - ./index.html:/opt/app/frontend/index.html
-```
-
-3. Перезапусти контейнер:
-
-```bash
-docker compose restart remnawave-subscription-page
-```
-
-> Страница использует серверный рендеринг (`<%= ... %>`), поэтому работает только в связке с RemnaWave.
+</details>
 
 ---
 
-## 🎨 Кастомизация через скрипт
+## 🎨 Theme Reference
 
-Скрипт `setup.sh` поддерживает готовые темы оформления. Запуск:
+| # | Theme | Primary | Secondary | Description |
+|:-:|---|---|---|---|
+| **1** | **Purple** | `#c084fc` | — | Default violet theme with dark gradient |
+| **2** | **Monochrome** | `#e0e0e0` | — | Grayscale minimalist theme |
+| **3** | **Cyberpunk** | `#ff2d78` | `#00d4ff` | Hot pink + cyan neon |
+| **4** | **Emerald** | `#34d399` | — | Green/teal nature theme |
+| **5** | **Amber** | `#f59e0b` | — | Warm orange/yellow theme |
+| **6** | **Ocean** | `#60a5fa` | — | Blue/indigo deep theme |
 
-```bash
-bash setup.sh                  # интерактивный режим: выбор языка и темы
-bash setup.sh -t 3            # неинтерактивно: тема Cyberpunk
-bash setup.sh -t 2 -l ru      # тема Monochrome + русский язык
-```
-
-### Доступные темы
-
-| № | Тема | Акцент | Фон |
-|---|---|---|---|
-| `1` | **Default (Purple)** | `#c084fc` фиолетовый | тёмный градиент |
-| `2` | **Monochrome** | `#e0e0e0` серый | чёрно-серый |
-| `3` | **Cyberpunk** | `#ff2d78` розовый + `#00d4ff` голубой | тёмный неон |
-| `4` | **Emerald** | `#34d399` изумрудный | тёмно-зелёный |
-| `5` | **Amber** | `#f59e0b` янтарный | тёмный тёплый |
-| `6` | **Ocean** | `#60a5fa` синий | тёмно-синий |
-
-Скрипт меняет:
-- Акцентный цвет (`--primary-color`)
-- Фон страницы (градиент + свечение)
-- Цвета warp-эффекта
+**What the script changes:**
+- Primary color (`--primary-color`)
+- Background gradient (3-layer + glow)
+- Warp shader colors (4 colors)
 - Meta theme-color
+- All CSS variables
 
 ---
 
-## ⚙️ Параметры Warp-эффекта
+## ⚙️ Warp Effect Configuration
 
-Эффект настраивается в вызове `initWarpEffect()` в `index.html`:
+<details>
+<summary><b>Advanced: Customize warp shader parameters</b></summary>
 
-| Параметр | По умолчанию | Описание |
+Edit `initWarpEffect()` call in `index.html`:
+
+| Parameter | Default | Description |
 |---|---|---|
-| `speed` | `0.8` | Скорость анимации |
-| `proportion` | `0.55` | Пропорция смешивания цветов |
-| `distortion` | `0.12` | Сила искажения шума |
-| `swirl` | `1.0` | Интенсивность завихрений |
-| `swirlIterations` | `13` | Количество итераций завихрения |
-| `shape` | `1` | Тип узора (0=клетка, 1=полосы, 2=край) |
-| `softness` | `0.8` | Мягкость цветовых переходов |
-| `colors` | — | Массив цветов в формате `[R, G, B]` |
+| `speed` | `0.8` | Animation speed |
+| `proportion` | `0.55` | Color blend ratio |
+| `distortion` | `0.12` | Noise distortion strength |
+| `swirl` | `1.0` | Swirl intensity |
+| `swirlIterations` | `13` | Swirl iteration count |
+| `shape` | `1` | Pattern type (0=grid, 1=stripes, 2=edge) |
+| `softness` | `0.8` | Color transition softness |
+| `colors` | `[[R,G,B], ...]` | Color palette array |
+
+</details>
 
 ---
 
-## 📄 Лицензия
+## 📋 Requirements
 
-MIT
+- **RemnaWave Panel** — this page uses server-side rendering (`<%= ... %>`)
+- **Docker** — for container deployment
+- **Modern Browser** — WebGL2 support required
+
+---
+
+## 📄 License
+
+MIT © 2026
+
+---
+
+<div align="center">
+
+**Built with** ❤️ **for RemnaWave**
+
+[Report Bug](https://github.com/d3myasha/Remna-Reiwa-Subpage/issues) • [Request Feature](https://github.com/d3myasha/Remna-Reiwa-Subpage/issues)
+
+</div>
