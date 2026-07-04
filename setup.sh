@@ -142,10 +142,14 @@ case "$theme_choice" in
         ;;
 esac
 
-# ── Download ─────────────────────────────────────────────────────────────
+# ── Download or use local ─────────────────────────────────────────────────
 echo ""
-echo "  $MSG_DOWNLOAD"
-curl -L -s -o index.html "$REPO_URL/index.html"
+if [ -f index.html ]; then
+    echo "  index.html найден, применяю тему к локальному файлу..."
+else
+    echo "  $MSG_DOWNLOAD"
+    curl -L -s -o index.html "$REPO_URL/index.html"
+fi
 
 # ── Patch CSS variables ──────────────────────────────────────────────────
 sed -i "s/--primary-color: #[0-9a-fA-F]*/--primary-color: $PRIMARY/" index.html
