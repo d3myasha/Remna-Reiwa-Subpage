@@ -15,7 +15,7 @@
 
 <p align="center">
   <b>⚡ Быстрая установка:</b>
-  <code>curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh -t 3</code>
+  <code>curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh</code>
 </p>
 
 ---
@@ -41,11 +41,19 @@
 
 ## 🚀 Установка
 
-Скрипт установки сам скачает index.html и настроит тему:
+Скрипт установки скачает index.html, предложит выбрать язык и тему:
 
 ```bash
-curl -L -s https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh | bash
+curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh
 ```
+
+Или одной строкой (неинтерактивно, с выбором темы сразу):
+
+```bash
+curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh -t 3
+```
+
+Где `-t` — номер темы (1-6).
 
 Или вручную: скачай файл в директорию подписки:
 
@@ -83,6 +91,35 @@ docker compose restart remnawave-subscription-page
 
 ---
 
+## 🎨 Кастомизация через скрипт
+
+Скрипт `setup.sh` поддерживает готовые темы оформления. Запуск:
+
+```bash
+bash setup.sh                  # интерактивный режим: выбор языка и темы
+bash setup.sh -t 3            # неинтерактивно: тема Cyberpunk
+bash setup.sh -t 2 -l ru      # тема Monochrome + русский язык
+```
+
+### Доступные темы
+
+| № | Тема | Акцент | Фон |
+|---|---|---|---|
+| `1` | **Default (Purple)** | `#c084fc` фиолетовый | тёмный градиент |
+| `2` | **Monochrome** | `#e0e0e0` серый | чёрно-серый |
+| `3` | **Cyberpunk** | `#ff2d78` розовый + `#00d4ff` голубой | тёмный неон |
+| `4` | **Emerald** | `#34d399` изумрудный | тёмно-зелёный |
+| `5` | **Amber** | `#f59e0b` янтарный | тёмный тёплый |
+| `6` | **Ocean** | `#60a5fa` синий | тёмно-синий |
+
+Скрипт меняет:
+- Акцентный цвет (`--primary-color`)
+- Фон страницы (градиент + свечение)
+- Цвета warp-эффекта
+- Meta theme-color
+
+---
+
 ## ⚙️ Параметры Warp-эффекта
 
 Эффект настраивается в вызове `initWarpEffect()` в `index.html`:
@@ -103,9 +140,7 @@ docker compose restart remnawave-subscription-page
 ## 🔧 Кастомизация
 
 Все тексты и переводы находятся в `appConfig.locales`.  
-Темы переключаются через `appConfig.baseSettings.theme`.
-
-Цветовая схема Warp-эффекта задаётся массивом `colors` — можно менять под свой бренд.
+Warp-эффект настраивается параметрами в `initWarpEffect()` (см. таблицу выше).
 
 ---
 
