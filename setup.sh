@@ -119,45 +119,45 @@ case "$theme_choice" in
         WARP_L3='                            [0.02, 0.02, 0.02],'
         WARP_L4='                            [0.8, 0.8, 0.8],'
         ;;
-    3) # Cyberpunk
+    3) # Cyberpunk — hot pink / cyan neon
         PRIMARY="#ff2d78"; PRIMARY_RGB="255, 45, 120"; HOVER="#ff6b9d"; BACKGROUND="#0a0515"; INFO="#00d4ff"; THEME_COLOR="#ff2d78"
         BG_GRADIENT_START="#2d0a1e"; BG_GRADIENT_MID="#0f0515"; BG_GRADIENT_END="#050210"; BG_GLOW="rgba(var(--primary-rgb), 0.06)"
-        C_BLUE="#00d4ff"; C_CYAN="#00ffcc"; C_DARK="#12082a"; C_GRAPE="#c084fc"; C_GRAY="#6b7280"
-        C_GREEN="#00ff88"; C_INDIGO="#7c3aed"; C_LIME="#aaff00"; C_ORANGE="#ff6600"; C_PINK="#ff2d78"
-        C_RED="#ff3355"; C_TEAL="#00d4aa"; C_VIOLET="#a855f7"; C_YELLOW="#ffdd00"
+        C_BLUE="#00d4ff"; C_CYAN="#00ffcc"; C_DARK="#12082a"; C_GRAPE="#ff6b9d"; C_GRAY="#6b7280"
+        C_GREEN="#00ff88"; C_INDIGO="#7c3aed"; C_LIME="#c6ff00"; C_ORANGE="#ff6600"; C_PINK="#ff2d78"
+        C_RED="#ff1744"; C_TEAL="#00d4aa"; C_VIOLET="#ff2d78"; C_YELLOW="#ffea00"
         WARP_L1='                            [0.04, 0.02, 0.08],'
         WARP_L2='                            [1.0, 0.18, 0.47],'
         WARP_L3='                            [0.04, 0.02, 0.08],'
         WARP_L4='                            [0.0, 0.83, 1.0],'
         ;;
-    4) # Emerald
+    4) # Emerald — green / teal
         PRIMARY="#34d399"; PRIMARY_RGB="52, 211, 153"; HOVER="#6ee7b7"; BACKGROUND="#050f0a"; INFO="#34d399"; THEME_COLOR="#34d399"
         BG_GRADIENT_START="#0a2d1e"; BG_GRADIENT_MID="#050f0a"; BG_GRADIENT_END="#020a05"; BG_GLOW="rgba(var(--primary-rgb), 0.06)"
-        C_BLUE="#67e8f9"; C_CYAN="#5eead4"; C_DARK="#0a1a12"; C_GRAPE="#34d399"; C_GRAY="#6b7280"
+        C_BLUE="#38bdf8"; C_CYAN="#2dd4bf"; C_DARK="#0a1a12"; C_GRAPE="#6ee7b7"; C_GRAY="#6b7280"
         C_GREEN="#34d399"; C_INDIGO="#818cf8"; C_LIME="#a3e635"; C_ORANGE="#fb923c"; C_PINK="#f472b6"
-        C_RED="#f87171"; C_TEAL="#2dd4bf"; C_VIOLET="#a78bfa"; C_YELLOW="#facc15"
+        C_RED="#f87171"; C_TEAL="#14b8a6"; C_VIOLET="#34d399"; C_YELLOW="#facc15"
         WARP_L1='                            [0.02, 0.06, 0.03],'
         WARP_L2='                            [0.1, 0.9, 0.5],'
         WARP_L3='                            [0.02, 0.06, 0.03],'
         WARP_L4='                            [0.3, 1.0, 0.6],'
         ;;
-    5) # Amber
+    5) # Amber — warm orange / yellow
         PRIMARY="#f59e0b"; PRIMARY_RGB="245, 158, 11"; HOVER="#fbbf24"; BACKGROUND="#0f0a05"; INFO="#f59e0b"; THEME_COLOR="#f59e0b"
         BG_GRADIENT_START="#2d1a0a"; BG_GRADIENT_MID="#0f0a05"; BG_GRADIENT_END="#0a0502"; BG_GLOW="rgba(var(--primary-rgb), 0.06)"
-        C_BLUE="#93c5fd"; C_CYAN="#67e8f9"; C_DARK="#1a120a"; C_GRAPE="#f59e0b"; C_GRAY="#78716c"
+        C_BLUE="#93c5fd"; C_CYAN="#67e8f9"; C_DARK="#1a120a"; C_GRAPE="#fbbf24"; C_GRAY="#78716c"
         C_GREEN="#a3e635"; C_INDIGO="#a5b4fc"; C_LIME="#eab308"; C_ORANGE="#f97316"; C_PINK="#fb7185"
-        C_RED="#f87171"; C_TEAL="#2dd4bf"; C_VIOLET="#c084fc"; C_YELLOW="#fbbf24"
+        C_RED="#ef4444"; C_TEAL="#2dd4bf"; C_VIOLET="#f59e0b"; C_YELLOW="#fbbf24"
         WARP_L1='                            [0.08, 0.04, 0.01],'
         WARP_L2='                            [1.0, 0.7, 0.1],'
         WARP_L3='                            [0.08, 0.04, 0.01],'
         WARP_L4='                            [0.1, 0.1, 0.1],'
         ;;
-    6) # Ocean
+    6) # Ocean — blue / indigo
         PRIMARY="#60a5fa"; PRIMARY_RGB="96, 165, 250"; HOVER="#93bbfc"; BACKGROUND="#05080f"; INFO="#60a5fa"; THEME_COLOR="#60a5fa"
         BG_GRADIENT_START="#0a1e2d"; BG_GRADIENT_MID="#050a15"; BG_GRADIENT_END="#02050a"; BG_GLOW="rgba(var(--primary-rgb), 0.06)"
         C_BLUE="#60a5fa"; C_CYAN="#22d3ee"; C_DARK="#0a1628"; C_GRAPE="#818cf8"; C_GRAY="#6b7280"
         C_GREEN="#34d399"; C_INDIGO="#6366f1"; C_LIME="#a3e635"; C_ORANGE="#fb923c"; C_PINK="#f472b6"
-        C_RED="#f87171"; C_TEAL="#14b8a6"; C_VIOLET="#8b5cf6"; C_YELLOW="#facc15"
+        C_RED="#f87171"; C_TEAL="#14b8a6"; C_VIOLET="#60a5fa"; C_YELLOW="#facc15"
         WARP_L1='                            [0.02, 0.04, 0.08],'
         WARP_L2='                            [0.3, 0.6, 1.0],'
         WARP_L3='                            [0.02, 0.04, 0.08],'
