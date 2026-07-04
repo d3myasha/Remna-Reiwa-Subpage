@@ -43,7 +43,7 @@
 
 ## 🚀 Установка
 
-1. Подключись к серверу по SSH и скачай файл:
+1. Подключись к серверу по SSH и скачай файл в директорию подписки:
 
 ```bash
 # Через wget
@@ -51,6 +51,15 @@ wget -O /opt/remnawave/subscription/index.html https://raw.githubusercontent.com
 
 # Или через curl
 curl -L -o /opt/remnawave/subscription/index.html https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
+```
+
+После скачивания структура будет такой:
+
+```
+/opt/remnawave/subscription/
+├── docker-compose.yml
+├── .env
+└── index.html
 ```
 
 2. Volume mount в `docker-compose.yml` уже должен быть:
