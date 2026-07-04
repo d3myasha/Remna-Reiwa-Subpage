@@ -13,6 +13,11 @@
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
 </p>
 
+<p align="center">
+  <b>⚡ Быстрая установка:</b>
+  <code>curl -L -s https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh | bash</code>
+</p>
+
 ---
 
 ## ✨ Features
@@ -36,7 +41,13 @@
 
 ## 🚀 Установка
 
-1. Подключись к серверу по SSH и скачай файл в директорию подписки:
+Скрипт установки сам скачает index.html и настроит тему:
+
+```bash
+curl -L -s https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh | bash
+```
+
+Или вручную: скачай файл в директорию подписки:
 
 ```bash
 # Через wget
@@ -55,7 +66,7 @@ curl -L -o /opt/remnawave/subscription/index.html https://raw.githubusercontent.
 └── index.html
 ```
 
-2. Volume mount в `docker-compose.yml` уже должен быть:
+2. Volume mount в `docker-compose.yml` (или проверь что он уже есть):
 
 ```yaml
 volumes:
