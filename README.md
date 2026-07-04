@@ -45,13 +45,27 @@
 
 ## 🚀 Установка
 
-1. Залей `index.html` на сервер RemnaWave в директорию подписки:
+1. Помести `index.html` рядом с `docker-compose.yml` контейнера подписки:
 
 ```
-/opt/remnawave/subscription/index.html
+/opt/remnawave/subscription/
+├── docker-compose.yml
+├── .env
+├── index.html          <-- этот файл
 ```
 
-2. Настрой в панели RemnaWave путь к кастомной странице подписки.
+2. Volume mount в `docker-compose.yml` уже должен быть:
+
+```yaml
+volumes:
+  - ./index.html:/opt/app/frontend/index.html
+```
+
+3. Перезапусти контейнер:
+
+```bash
+docker compose restart remnawave-subscription-page
+```
 
 > Страница использует серверный рендеринг (`<%= ... %>`), поэтому работает только в связке с RemnaWave.
 
