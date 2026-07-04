@@ -11,8 +11,6 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
-  <img src="assets/preview-dark.png" alt="Dark Theme Preview" width="45%">
-  <img src="assets/preview-light.png" alt="Light Theme Preview" width="45%">
 </p>
 
 ---
