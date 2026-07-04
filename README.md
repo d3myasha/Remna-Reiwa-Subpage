@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/subpage.png" alt="Remna Reiwa Subpage" width="800">
+</p>
+
 <h1 align="center">Remna Reiwa Subpage</h1>
 
 <p align="center">
@@ -27,10 +31,6 @@
 | Collapsed Card | Expanded Card |
 |---|---|
 | <img src="assets/subpage-collapsed.png" alt="Collapsed" width="360"> | <img src="assets/subpage-expanded.png" alt="Expanded" width="360"> |
-
-| Full Page |
-|---|
-| <img src="assets/subpage.png" alt="Full Page" width="720"> |
 
 ---
 
