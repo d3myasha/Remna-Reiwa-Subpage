@@ -221,32 +221,33 @@ echo "  $MSG_OK"
 echo ""
 
 # ── Docker compose: add volume & restart ────────────────────────────
-(
-    if [ -f docker-compose.yml ] || [ -f compose.yml ]; then
-        DC="docker-compose.yml"
-        [ -f compose.yml ] && DC="compose.yml"
-        echo "  → docker-compose.yml найден, проверяю volume..."
+echo "=== DOCKER BEGIN ==="
+if [ -f docker-compose.yml ]; then DC="docker-compose.yml"
+elif [ -f compose.yml ]; then DC="compose.yml"
+else DC=""; fi
 
-        if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC" 2>/dev/null; then
-            LINE=$(grep -n -m1 '^    [a-zA-Z0-9_-]*:' "$DC" 2>/dev/null | head -1 | cut -d: -f1)
-            if [ -n "$LINE" ]; then
-                head -n "$LINE" "$DC" > "${DC}.tmp"
-                echo "    volumes:" >> "${DC}.tmp"
-                echo "      - ./index.html:/opt/app/frontend/index.html" >> "${DC}.tmp"
-                tail -n +$((LINE + 1)) "$DC" >> "${DC}.tmp" 2>/dev/null
-                mv "${DC}.tmp" "$DC"
-                echo "  → Volume mount добавлен в $DC"
-            fi
+if [ -n "$DC" ]; then
+    echo "  [DEBUG] DC=$DC"
+
+    if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC" 2>/dev/null; then
+        LINE=$(grep -n '^    [a-zA-Z0-9_-]*:' "$DC" 2>/dev/null | head -1 | cut -d: -f1)
+        if [ -n "$LINE" ]; then
+            head -n "$LINE" "$DC" > "${DC}.tmp"
+            echo "    volumes:" >> "${DC}.tmp"
+            echo "      - ./index.html:/opt/app/frontend/index.html" >> "${DC}.tmp"
+            tail -n +$((LINE + 1)) "$DC" >> "${DC}.tmp" 2>/dev/null
+            mv "${DC}.tmp" "$DC"
+            echo "  → Volume mount добавлен в $DC"
         fi
-
-        echo "  → Перезапускаю контейнер..."
-        docker compose down --remove-orphans
-        docker compose up -d
-        echo "  ✓ Контейнер перезапущен"
-    else
-        echo "  docker-compose.yml не найден. Добавь volume mount и перезапусти вручную:"
-        echo "    volumes:"
-        echo "      - ./index.html:/opt/app/frontend/index.html"
-        echo "  docker compose down && docker compose up -d"
     fi
-) || true
+
+    echo "  → Перезапускаю контейнер..."
+    docker compose down --remove-orphans
+    docker compose up -d
+    echo "  ✓ Контейнер перезапущен"
+else
+    echo "  docker-compose.yml не найден."
+    echo "  Добавь volume mount: volumes: - ./index.html:/opt/app/frontend/index.html"
+    echo "  docker compose down && docker compose up -d"
+fi
+echo "=== DOCKER END ==="
