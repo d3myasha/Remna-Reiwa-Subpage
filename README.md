@@ -43,13 +43,14 @@
 
 ## 🚀 Установка
 
-1. Помести `index.html` рядом с `docker-compose.yml` контейнера подписки:
+1. Подключись к серверу по SSH и скачай файл:
 
-```
-/opt/remnawave/subscription/
-├── docker-compose.yml
-├── .env
-├── index.html          <-- этот файл
+```bash
+# Через wget
+wget -O /opt/remnawave/subscription/index.html https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
+
+# Или через curl
+curl -L -o /opt/remnawave/subscription/index.html https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/index.html
 ```
 
 2. Volume mount в `docker-compose.yml` уже должен быть:
