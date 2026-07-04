@@ -221,23 +221,26 @@ echo "  $MSG_OK"
 echo ""
 
 # ── Docker compose: add volume & restart ────────────────────────────
-DC_FILE=""
-[ -f docker-compose.yml ] && DC_FILE="docker-compose.yml"
-[ -f compose.yml ] && DC_FILE="compose.yml"
+if [ -f docker-compose.yml ] || [ -f compose.yml ]; then
+    DC="docker-compose.yml"
+    [ -f compose.yml ] && DC="compose.yml"
 
-if [ -n "$DC_FILE" ]; then
-    grep -q 'index.html:/opt/app/frontend/index.html' "$DC_FILE" 2>/dev/null || {
-        LINE=$(grep -n -m1 '^  [a-zA-Z0-9_-]*:' "$DC_FILE" 2>/dev/null | cut -d: -f1 || echo 3)
-        head -n "$LINE" "$DC_FILE" > "${DC_FILE}.tmp"
-        echo "    volumes:" >> "${DC_FILE}.tmp"
-        echo "      - ./index.html:/opt/app/frontend/index.html" >> "${DC_FILE}.tmp"
-        tail -n +$((LINE + 1)) "$DC_FILE" >> "${DC_FILE}.tmp" 2>/dev/null
-        mv "${DC_FILE}.tmp" "$DC_FILE" && echo "  → Volume mount добавлен в $DC_FILE"
-    }
+    if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC" 2>/dev/null; then
+        LINE=$(grep -n -m1 '^    [a-zA-Z0-9_-]*:' "$DC" 2>/dev/null | head -1 | cut -d: -f1)
+        if [ -n "$LINE" ]; then
+            head -n "$LINE" "$DC" > "${DC}.tmp"
+            echo "    volumes:" >> "${DC}.tmp"
+            echo "      - ./index.html:/opt/app/frontend/index.html" >> "${DC}.tmp"
+            tail -n +$((LINE + 1)) "$DC" >> "${DC}.tmp" 2>/dev/null
+            mv "${DC}.tmp" "$DC"
+            echo "  → Volume mount добавлен в $DC"
+        fi
+    fi
 
     echo "  → Перезапускаю контейнер..."
-    docker compose down --remove-orphans 2>/dev/null
-    docker compose up -d 2>/dev/null && echo "  ✓ Контейнер перезапущен" || echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose down && docker compose up -d"
+    docker compose down --remove-orphans || true
+    docker compose up -d || echo "  ✗ Не удалось запустить — сделай вручную: docker compose down && docker compose up -d"
+    echo "  ✓ Готово"
 else
     echo "  docker-compose.yml не найден. Добавь volume mount и перезапусти вручную:"
     echo "    volumes:"
