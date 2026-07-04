@@ -1,29 +1,47 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Redirect stdin to terminal for curl | bash compatibility
-if [ ! -t 0 ] && [ -e /dev/tty ]; then
-    exec < /dev/tty
-fi
-
 # ═══════════════════════════════════════════════════════════════════════════
 # Remna Reiwa Subpage — Setup Script
+# ═══════════════════════════════════════════════════════════════════════════
+# Usage:
+#   bash setup.sh              # interactive prompts
+#   bash setup.sh -t 3        # skip prompts, set theme directly
+#   bash setup.sh -t 2 -l ru  # theme + language
+#
+# One-liner (download + run):
+#   curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh -t 3
 # ═══════════════════════════════════════════════════════════════════════════
 
 REPO_URL="https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main"
 
-echo ""
-echo "  Remna Reiwa Subpage — Setup"
-echo "  ───────────────────────────"
-echo ""
-echo "  Select language:"
-echo "    1) English"
-echo "    2) Русский"
-echo ""
-read -rp "  > " lang_choice
+# ── Argument parsing ─────────────────────────────────────────────────────
+THEME_ARG=""
+LANG_ARG=""
+while getopts "t:l:" opt; do
+    case "$opt" in
+        t) THEME_ARG="$OPTARG" ;;
+        l) LANG_ARG="$OPTARG" ;;
+        *) echo "Usage: bash setup.sh [-t theme(1-6)] [-l en|ru]"; exit 1 ;;
+    esac
+done
 
-if [ "$lang_choice" = "2" ]; then
+# ── Language ─────────────────────────────────────────────────────────────
+if [ "$LANG_ARG" = "ru" ]; then
     L="ru"
+elif [ "$LANG_ARG" = "en" ]; then
+    L="en"
+elif [ -t 0 ]; then
+    echo ""
+    echo "  Remna Reiwa Subpage — Setup"
+    echo "  ───────────────────────────"
+    echo ""
+    echo "  Select language:"
+    echo "    1) English"
+    echo "    2) Русский"
+    echo ""
+    read -rp "  > " lang_choice
+    [ "$lang_choice" = "2" ] && L="ru" || L="en"
 else
     L="en"
 fi
@@ -58,89 +76,72 @@ else
 fi
 
 # ── Theme selection ──────────────────────────────────────────────────────
-echo ""
-echo "  $MSG_THEME"
-echo ""
-for i in "${!THEMES[@]}"; do
-    printf "  %d) %s\n" $((i+1)) "${THEMES[$i]}"
-done
-echo ""
-
-while true; do
-    read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice
-    case "$theme_choice" in
-        1|2|3|4|5|6) break ;;
-        *) echo "  $MSG_INVALID" ;;
-    esac
-done
+if [ -n "$THEME_ARG" ]; then
+    theme_choice="$THEME_ARG"
+else
+    echo ""
+    echo "  $MSG_THEME"
+    echo ""
+    for i in "${!THEMES[@]}"; do
+        printf "  %d) %s\n" $((i+1)) "${THEMES[$i]}"
+    done
+    echo ""
+    while true; do
+        read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice
+        case "$theme_choice" in
+            1|2|3|4|5|6) break ;;
+            *) echo "  $MSG_INVALID" ;;
+        esac
+    done
+fi
 
 # ── Theme config ─────────────────────────────────────────────────────────
 case "$theme_choice" in
-    1) # Default (Purple)
-        PRIMARY="#c084fc"
-        HOVER="#a78bfa"
-        BACKGROUND="#0a0812"
-        INFO="#c084fc"
-        THEME_COLOR="#c084fc"
+    1)
+        PRIMARY="#c084fc"; HOVER="#a78bfa"; BACKGROUND="#0a0812"; INFO="#c084fc"; THEME_COLOR="#c084fc"
         WARP_L1='                            [0.07, 0.07, 0.07],'
         WARP_L2='                            [0.58, 0.44, 1.0],'
         WARP_L3='                            [0.07, 0.07, 0.07],'
         WARP_L4='                            [0.53, 0.22, 1.0],'
         ;;
-    2) # Monochrome
-        PRIMARY="#e0e0e0"
-        HOVER="#c0c0c0"
-        BACKGROUND="#0a0a0a"
-        INFO="#9ca3af"
-        THEME_COLOR="#666666"
+    2)
+        PRIMARY="#e0e0e0"; HOVER="#c0c0c0"; BACKGROUND="#0a0a0a"; INFO="#9ca3af"; THEME_COLOR="#666666"
         WARP_L1='                            [0.02, 0.02, 0.02],'
         WARP_L2='                            [0.5, 0.5, 0.5],'
         WARP_L3='                            [0.02, 0.02, 0.02],'
         WARP_L4='                            [0.8, 0.8, 0.8],'
         ;;
-    3) # Cyberpunk
-        PRIMARY="#ff2d78"
-        HOVER="#ff6b9d"
-        BACKGROUND="#0a0515"
-        INFO="#00d4ff"
-        THEME_COLOR="#ff2d78"
+    3)
+        PRIMARY="#ff2d78"; HOVER="#ff6b9d"; BACKGROUND="#0a0515"; INFO="#00d4ff"; THEME_COLOR="#ff2d78"
         WARP_L1='                            [0.04, 0.02, 0.08],'
         WARP_L2='                            [1.0, 0.18, 0.47],'
         WARP_L3='                            [0.04, 0.02, 0.08],'
         WARP_L4='                            [0.0, 0.83, 1.0],'
         ;;
-    4) # Emerald
-        PRIMARY="#34d399"
-        HOVER="#6ee7b7"
-        BACKGROUND="#050f0a"
-        INFO="#34d399"
-        THEME_COLOR="#34d399"
+    4)
+        PRIMARY="#34d399"; HOVER="#6ee7b7"; BACKGROUND="#050f0a"; INFO="#34d399"; THEME_COLOR="#34d399"
         WARP_L1='                            [0.02, 0.06, 0.03],'
         WARP_L2='                            [0.1, 0.9, 0.5],'
         WARP_L3='                            [0.02, 0.06, 0.03],'
         WARP_L4='                            [0.3, 1.0, 0.6],'
         ;;
-    5) # Amber
-        PRIMARY="#f59e0b"
-        HOVER="#fbbf24"
-        BACKGROUND="#0f0a05"
-        INFO="#f59e0b"
-        THEME_COLOR="#f59e0b"
+    5)
+        PRIMARY="#f59e0b"; HOVER="#fbbf24"; BACKGROUND="#0f0a05"; INFO="#f59e0b"; THEME_COLOR="#f59e0b"
         WARP_L1='                            [0.08, 0.04, 0.01],'
         WARP_L2='                            [1.0, 0.7, 0.1],'
         WARP_L3='                            [0.08, 0.04, 0.01],'
         WARP_L4='                            [1.0, 0.4, 0.1],'
         ;;
-    6) # Ocean
-        PRIMARY="#60a5fa"
-        HOVER="#93bbfc"
-        BACKGROUND="#05080f"
-        INFO="#60a5fa"
-        THEME_COLOR="#60a5fa"
+    6)
+        PRIMARY="#60a5fa"; HOVER="#93bbfc"; BACKGROUND="#05080f"; INFO="#60a5fa"; THEME_COLOR="#60a5fa"
         WARP_L1='                            [0.02, 0.04, 0.08],'
         WARP_L2='                            [0.3, 0.6, 1.0],'
         WARP_L3='                            [0.02, 0.04, 0.08],'
         WARP_L4='                            [0.6, 0.85, 1.0],'
+        ;;
+    *)
+        echo "  $MSG_INVALID"
+        exit 1
         ;;
 esac
 
@@ -160,7 +161,7 @@ sed -i "s/--background: #[0-9a-fA-F]*/--background: $BACKGROUND/" index.html
 sed -i "s/--info: #[0-9a-fA-F]*/--info: $INFO/" index.html
 sed -i "s|content=\"#[0-9a-fA-F]*\" id=\"themeColor\"|content=\"$THEME_COLOR\" id=\"themeColor\"|" index.html
 
-# ── Patch warp colors (multi-line sed) ───────────────────────────────────
+# ── Patch warp colors ────────────────────────────────────────────────────
 sed -i '/                    colors: \[/,/                    \],/c\
                     colors: [\
 '"$WARP_L1"'\
@@ -177,19 +178,12 @@ if [ "$L" = "ru" ]; then
     cat <<'INSTRU'
   ─── Дальнейшие действия ───
 
-  1. Размести index.html рядом с docker-compose.yml:
-
-       /opt/remnawave/subscription/
-       ├── docker-compose.yml
-       ├── .env
-       └── index.html
-
-  2. Добавь volume mount в docker-compose.yml:
+  1. Проверь volume mount в docker-compose.yml:
 
        volumes:
          - ./index.html:/opt/app/frontend/index.html
 
-  3. Перезапусти контейнер:
+  2. Перезапусти контейнер:
 
        docker compose restart remnawave-subscription-page
 
@@ -198,19 +192,12 @@ else
     cat <<'INSTRU'
   ─── Next steps ───
 
-  1. Place index.html next to your docker-compose.yml:
-
-       /opt/remnawave/subscription/
-       ├── docker-compose.yml
-       ├── .env
-       └── index.html
-
-  2. Add volume mount to docker-compose.yml:
+  1. Verify volume mount in docker-compose.yml:
 
        volumes:
          - ./index.html:/opt/app/frontend/index.html
 
-  3. Restart container:
+  2. Restart container:
 
        docker compose restart remnawave-subscription-page
 
