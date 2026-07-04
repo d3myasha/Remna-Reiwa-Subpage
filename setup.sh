@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Redirect stdin to terminal for curl | bash compatibility
+exec < /dev/tty
+
 # ═══════════════════════════════════════════════════════════════════════════
 # Remna Reiwa Subpage — Setup Script
 # ═══════════════════════════════════════════════════════════════════════════
@@ -15,7 +18,7 @@ echo "  Select language:"
 echo "    1) English"
 echo "    2) Русский"
 echo ""
-read -rp "  > " lang_choice < /dev/tty
+read -rp "  > " lang_choice
 
 if [ "$lang_choice" = "2" ]; then
     L="ru"
@@ -62,7 +65,7 @@ done
 echo ""
 
 while true; do
-    read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice < /dev/tty
+    read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice
     case "$theme_choice" in
         1|2|3|4|5|6) break ;;
         *) echo "  $MSG_INVALID" ;;
