@@ -220,50 +220,27 @@ sed -i "s/--color-yellow: #[0-9a-fA-F]*/--color-yellow: $C_YELLOW/" index.html
 echo "  $MSG_OK"
 echo ""
 
-# ── Docker compose: auto volume + restart ──────────────────────────────
+# ── Docker compose: add volume & restart ────────────────────────────
 DC_FILE=""
-for f in docker-compose.yml compose.yml; do
-    [ -f "$f" ] && DC_FILE="$f" && break
-done
+[ -f docker-compose.yml ] && DC_FILE="docker-compose.yml"
+[ -f compose.yml ] && DC_FILE="compose.yml"
 
 if [ -n "$DC_FILE" ]; then
-    SERVICE=$(grep -E '^  [a-zA-Z0-9_-]*:' "$DC_FILE" | sed 's/^  //;s/://' | grep -i subscri | head -1)
-    [ -z "$SERVICE" ] && SERVICE=$(docker ps --format '{{.Names}}' | grep subscri | head -1)
-    [ -z "$SERVICE" ] && SERVICE="remnawave-subscription-page"
-
-    if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC_FILE"; then
-        LINE=$(awk "/^  $SERVICE:/{print NR; exit}" "$DC_FILE" 2>/dev/null)
-        if [ -n "$LINE" ]; then
-            {
-                head -n "$LINE" "$DC_FILE"
-                echo "    volumes:"
-                echo "      - ./index.html:/opt/app/frontend/index.html"
-                tail -n +$((LINE + 1)) "$DC_FILE"
-            } > "${DC_FILE}.tmp" && mv "${DC_FILE}.tmp" "$DC_FILE"
-            echo "  → Volume mount добавлен в $DC_FILE"
-        else
-            echo "  → Сервсис '$SERVICE' не найден в $DC_FILE, добавь volume mount вручную"
-        fi
-    fi
+    grep -q 'index.html:/opt/app/frontend/index.html' "$DC_FILE" 2>/dev/null || {
+        LINE=$(grep -n -m1 '^  [a-zA-Z0-9_-]*:' "$DC_FILE" 2>/dev/null | cut -d: -f1 || echo 3)
+        head -n "$LINE" "$DC_FILE" > "${DC_FILE}.tmp"
+        echo "    volumes:" >> "${DC_FILE}.tmp"
+        echo "      - ./index.html:/opt/app/frontend/index.html" >> "${DC_FILE}.tmp"
+        tail -n +$((LINE + 1)) "$DC_FILE" >> "${DC_FILE}.tmp" 2>/dev/null
+        mv "${DC_FILE}.tmp" "$DC_FILE" && echo "  → Volume mount добавлен в $DC_FILE"
+    }
 
     echo "  → Перезапускаю контейнер..."
-    if docker compose down --remove-orphans && docker compose up -d; then
-        echo "  ✓ Контейнер перезапущен"
-    else
-        echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose down && docker compose up -d"
-    fi
+    docker compose down --remove-orphans 2>/dev/null
+    docker compose up -d 2>/dev/null && echo "  ✓ Контейнер перезапущен" || echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose down && docker compose up -d"
 else
-    if [ "$L" = "ru" ]; then
-        echo "  docker-compose.yml не найден."
-        echo "  Добавь volume mount вручную:"
-        echo "    volumes:"
-        echo "      - ./index.html:/opt/app/frontend/index.html"
-        echo "  И перезапусти: docker compose down && docker compose up -d"
-    else
-        echo "  docker-compose.yml not found."
-        echo "  Add volume mount manually:"
-        echo "    volumes:"
-        echo "      - ./index.html:/opt/app/frontend/index.html"
-        echo "  Then restart: docker compose down && docker compose up -d"
-    fi
+    echo "  docker-compose.yml не найден. Добавь volume mount и перезапусти вручную:"
+    echo "    volumes:"
+    echo "      - ./index.html:/opt/app/frontend/index.html"
+    echo "  docker compose down && docker compose up -d"
 fi
