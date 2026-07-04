@@ -15,7 +15,7 @@ echo "  Select language:"
 echo "    1) English"
 echo "    2) Русский"
 echo ""
-read -rp "  > " lang_choice
+read -rp "  > " lang_choice < /dev/tty
 
 if [ "$lang_choice" = "2" ]; then
     L="ru"
@@ -62,7 +62,7 @@ done
 echo ""
 
 while true; do
-    read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice
+    read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice < /dev/tty
     case "$theme_choice" in
         1|2|3|4|5|6) break ;;
         *) echo "  $MSG_INVALID" ;;
