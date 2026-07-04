@@ -247,19 +247,19 @@ if [ -n "$DC_FILE" ]; then
     fi
 
     echo "  → Перезапускаю контейнер..."
-    docker compose restart "$SERVICE" 2>/dev/null || docker restart "$SERVICE" 2>/dev/null && echo "  ✓ Контейнер перезапущен" || echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose restart $SERVICE"
+    docker compose down --remove-orphans && docker compose up -d && echo "  ✓ Контейнер перезапущен" || echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose down && docker compose up -d"
 else
     if [ "$L" = "ru" ]; then
         echo "  docker-compose.yml не найден."
         echo "  Добавь volume mount вручную:"
         echo "    volumes:"
         echo "      - ./index.html:/opt/app/frontend/index.html"
-        echo "  И перезапусти: docker compose restart remnawave-subscription-page"
+        echo "  И перезапусти: docker compose down && docker compose up -d"
     else
         echo "  docker-compose.yml not found."
         echo "  Add volume mount manually:"
         echo "    volumes:"
         echo "      - ./index.html:/opt/app/frontend/index.html"
-        echo "  Then restart: docker compose restart remnawave-subscription-page"
+        echo "  Then restart: docker compose down && docker compose up -d"
     fi
 fi
