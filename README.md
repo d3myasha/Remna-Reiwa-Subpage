@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/subpage.png" alt="Remna Reiwa Subpage" width="800">
+  <img src="assets/demo.gif" alt="Remna Reiwa Subpage" width="800">
 </p>
 
 <h1 align="center">Remna Reiwa Subpage</h1>
@@ -31,11 +31,19 @@
 
 ---
 
-## 📸 Скриншоты
+## 🎨 Темы
 
-| Collapsed Card | Expanded Card |
+| Purple | Monochrome |
 |---|---|
-| <img src="assets/subpage-collapsed.png" alt="Collapsed" width="360"> | <img src="assets/subpage-expanded.png" alt="Expanded" width="360"> |
+| <img src="assets/Purple.png" alt="Purple" width="360"> | <img src="assets/Monochrome.png" alt="Monochrome" width="360"> |
+
+| Cyberpunk | Emerald |
+|---|---|
+| <img src="assets/Cyberpunk.png" alt="Cyberpunk" width="360"> | <img src="assets/Emerald.png" alt="Emerald" width="360"> |
+
+| Amber | Ocean |
+|---|---|
+| <img src="assets/Amber.png" alt="Amber" width="360"> | <img src="assets/Ocean.png" alt="Ocean" width="360"> |
 
 ---
 
