@@ -247,7 +247,11 @@ if [ -n "$DC_FILE" ]; then
     fi
 
     echo "  → Перезапускаю контейнер..."
-    docker compose down --remove-orphans && docker compose up -d && echo "  ✓ Контейнер перезапущен" || echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose down && docker compose up -d"
+    if docker compose down --remove-orphans && docker compose up -d; then
+        echo "  ✓ Контейнер перезапущен"
+    else
+        echo "  ✗ Не удалось перезапустить — сделай вручную: docker compose down && docker compose up -d"
+    fi
 else
     if [ "$L" = "ru" ]; then
         echo "  docker-compose.yml не найден."
