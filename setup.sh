@@ -99,6 +99,7 @@ fi
 case "$theme_choice" in
     1)
         PRIMARY="#c084fc"; HOVER="#a78bfa"; BACKGROUND="#0a0812"; INFO="#c084fc"; THEME_COLOR="#c084fc"
+        BG_GRADIENT_START="#1e1b4b"; BG_GRADIENT_MID="#0f0a1a"; BG_GRADIENT_END="#020617"; BG_GLOW="rgba(192, 132, 252, 0.06)"
         WARP_L1='                            [0.07, 0.07, 0.07],'
         WARP_L2='                            [0.58, 0.44, 1.0],'
         WARP_L3='                            [0.07, 0.07, 0.07],'
@@ -106,6 +107,7 @@ case "$theme_choice" in
         ;;
     2)
         PRIMARY="#e0e0e0"; HOVER="#c0c0c0"; BACKGROUND="#0a0a0a"; INFO="#9ca3af"; THEME_COLOR="#666666"
+        BG_GRADIENT_START="#1a1a1a"; BG_GRADIENT_MID="#0f0f0f"; BG_GRADIENT_END="#050505"; BG_GLOW="rgba(255, 255, 255, 0.03)"
         WARP_L1='                            [0.02, 0.02, 0.02],'
         WARP_L2='                            [0.5, 0.5, 0.5],'
         WARP_L3='                            [0.02, 0.02, 0.02],'
@@ -113,6 +115,7 @@ case "$theme_choice" in
         ;;
     3)
         PRIMARY="#ff2d78"; HOVER="#ff6b9d"; BACKGROUND="#0a0515"; INFO="#00d4ff"; THEME_COLOR="#ff2d78"
+        BG_GRADIENT_START="#2d0a1e"; BG_GRADIENT_MID="#0f0515"; BG_GRADIENT_END="#050210"; BG_GLOW="rgba(255, 45, 120, 0.06)"
         WARP_L1='                            [0.04, 0.02, 0.08],'
         WARP_L2='                            [1.0, 0.18, 0.47],'
         WARP_L3='                            [0.04, 0.02, 0.08],'
@@ -120,6 +123,7 @@ case "$theme_choice" in
         ;;
     4)
         PRIMARY="#34d399"; HOVER="#6ee7b7"; BACKGROUND="#050f0a"; INFO="#34d399"; THEME_COLOR="#34d399"
+        BG_GRADIENT_START="#0a2d1e"; BG_GRADIENT_MID="#050f0a"; BG_GRADIENT_END="#020a05"; BG_GLOW="rgba(52, 211, 153, 0.06)"
         WARP_L1='                            [0.02, 0.06, 0.03],'
         WARP_L2='                            [0.1, 0.9, 0.5],'
         WARP_L3='                            [0.02, 0.06, 0.03],'
@@ -127,6 +131,7 @@ case "$theme_choice" in
         ;;
     5)
         PRIMARY="#f59e0b"; HOVER="#fbbf24"; BACKGROUND="#0f0a05"; INFO="#f59e0b"; THEME_COLOR="#f59e0b"
+        BG_GRADIENT_START="#2d1a0a"; BG_GRADIENT_MID="#0f0a05"; BG_GRADIENT_END="#0a0502"; BG_GLOW="rgba(245, 158, 11, 0.06)"
         WARP_L1='                            [0.08, 0.04, 0.01],'
         WARP_L2='                            [1.0, 0.7, 0.1],'
         WARP_L3='                            [0.08, 0.04, 0.01],'
@@ -134,6 +139,7 @@ case "$theme_choice" in
         ;;
     6)
         PRIMARY="#60a5fa"; HOVER="#93bbfc"; BACKGROUND="#05080f"; INFO="#60a5fa"; THEME_COLOR="#60a5fa"
+        BG_GRADIENT_START="#0a1e2d"; BG_GRADIENT_MID="#050a15"; BG_GRADIENT_END="#02050a"; BG_GLOW="rgba(96, 165, 250, 0.06)"
         WARP_L1='                            [0.02, 0.04, 0.08],'
         WARP_L2='                            [0.3, 0.6, 1.0],'
         WARP_L3='                            [0.02, 0.04, 0.08],'
@@ -160,6 +166,12 @@ sed -i "s/--primary-hover: #[0-9a-fA-F]*/--primary-hover: $HOVER/" index.html
 sed -i "s/--background: #[0-9a-fA-F]*/--background: $BACKGROUND/" index.html
 sed -i "s/--info: #[0-9a-fA-F]*/--info: $INFO/" index.html
 sed -i "s|content=\"#[0-9a-fA-F]*\" id=\"themeColor\"|content=\"$THEME_COLOR\" id=\"themeColor\"|" index.html
+
+# ── Patch background gradient & glow ──────────────────────────────────────
+sed -i "s/--bg-gradient-start: #[0-9a-fA-F]*/--bg-gradient-start: $BG_GRADIENT_START/" index.html
+sed -i "s/--bg-gradient-mid: #[0-9a-fA-F]*/--bg-gradient-mid: $BG_GRADIENT_MID/" index.html
+sed -i "s/--bg-gradient-end: #[0-9a-fA-F]*/--bg-gradient-end: $BG_GRADIENT_END/" index.html
+sed -i "s|--bg-glow: rgba[^;]*|--bg-glow: $BG_GLOW|" index.html
 
 # ── Patch warp colors ────────────────────────────────────────────────────
 sed -i '/                    colors: \[/,/                    \],/c\
