@@ -253,21 +253,28 @@ if [ -n "$DC" ]; then
         fi
     fi
 
-    # Спрашиваем, перезапускать ли
-    if [ "$L" = "ru" ]; then
-        echo "  Хочешь перезапустить контейнер сейчас?"
-        read -rp "  Добавить volume и перезапустить? [Y/n]: " restart_choice
+    # Спрашиваем, перезапускать ли (только в интерактивном режиме)
+    if [ -n "$THEME_ARG" ]; then
+        echo "  → Перезапускаю контейнер..."
+        docker compose down --remove-orphans
+        docker compose up -d
+        echo "  ✓ Контейнер перезапущен"
     else
-        echo "  Restart container now?"
-        read -rp "  Add volume and restart? [Y/n]: " restart_choice
+        if [ "$L" = "ru" ]; then
+            echo "  Хочешь перезапустить контейнер сейчас?"
+            read -rp "  Добавить volume и перезапустить? [Y/n]: " restart_choice
+        else
+            echo "  Restart container now?"
+            read -rp "  Add volume and restart? [Y/n]: " restart_choice
+        fi
+        case "$restart_choice" in
+            n|N|no|No) echo "  → Добавь volume и перезапусти вручную: docker compose restart" ;;
+            *) echo "  → Перезапускаю контейнер..."
+               docker compose down --remove-orphans
+               docker compose up -d
+               echo "  ✓ Контейнер перезапущен" ;;
+        esac
     fi
-    case "$restart_choice" in
-        n|N|no|No) echo "  → Добавь volume и перезапусти вручную: docker compose restart" ;;
-        *) echo "  → Перезапускаю контейнер..."
-           docker compose down --remove-orphans
-           docker compose up -d
-           echo "  ✓ Контейнер перезапущен" ;;
-    esac
 else
     echo "  docker-compose.yml не найден."
     if [ "$L" = "ru" ]; then
