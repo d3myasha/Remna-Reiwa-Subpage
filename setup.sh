@@ -228,8 +228,8 @@ else DC=""; fi
 
 if [ -n "$DC" ]; then
     if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC" 2>/dev/null; then
-        # Находим первый сервис и его отступ
-        FIRST_SERVICE=$(grep -n '^[[:space:]]*[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | head -1)
+        # Находим первый сервис и его отступ (ищем ключи с отступом >= 2)
+        FIRST_SERVICE=$(grep -n '^[[:space:]]\{2,\}[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | head -1)
         SERVICE_LINE=$(echo "$FIRST_SERVICE" | cut -d: -f1)
         SERVICE_INDENT=$(echo "$FIRST_SERVICE" | grep -oP '^[[:space:]]*(?=[a-zA-Z0-9_-]+:)' | wc -c)
         SERVICE_INDENT=$((SERVICE_INDENT - 1))
@@ -248,7 +248,7 @@ if [ -n "$DC" ]; then
         VOL_ITEM_INDENT=$(printf '%*s' $((PROP_INDENT + 2)) '')
 
         if [ -n "$SERVICE_LINE" ]; then
-            NEXT_SERVICE=$(grep -n '^[[:space:]]*[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | sed -n "2p" | cut -d: -f1)
+            NEXT_SERVICE=$(grep -n '^[[:space:]]\{2,\}[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | sed -n "2p" | cut -d: -f1)
             [ -z "$NEXT_SERVICE" ] && NEXT_SERVICE=$(wc -l < "$DC")
 
             # Ищем volumes между SERVICE_LINE и NEXT_SERVICE
