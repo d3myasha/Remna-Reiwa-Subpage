@@ -228,25 +228,46 @@ else DC=""; fi
 
 if [ -n "$DC" ]; then
     if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC" 2>/dev/null; then
-        FIRST_SERVICE=$(grep -n '^\s\{2,4\}[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | head -1)
+        # Находим первый сервис и его отступ
+        FIRST_SERVICE=$(grep -n '^[[:space:]]*[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | head -1)
         SERVICE_LINE=$(echo "$FIRST_SERVICE" | cut -d: -f1)
+        SERVICE_INDENT=$(echo "$FIRST_SERVICE" | grep -oP '^[[:space:]]*(?=[a-zA-Z0-9_-]+:)' | wc -c)
+        SERVICE_INDENT=$((SERVICE_INDENT - 1))
+        [ "$SERVICE_INDENT" -lt 0 ] && SERVICE_INDENT=0
+
+        # Находим отступ свойств внутри сервиса (первая строка вида "    image:" после сервиса)
+        PROP_INDENT=0
+        if [ -n "$SERVICE_LINE" ]; then
+            PROP_LINE=$(sed -n "${SERVICE_LINE},\$p" "$DC" | grep -n '^\s\{'"$((SERVICE_INDENT+2))"',\}[a-z_-]\+:' | head -1)
+            PROP_INDENT=$(echo "$PROP_LINE" | grep -oP '^[[:space:]]*(?=[a-z_-]+:)' | wc -c)
+            PROP_INDENT=$((PROP_INDENT - 1))
+        fi
+        [ "$PROP_INDENT" -lt 2 ] && PROP_INDENT=$((SERVICE_INDENT + 4))
+
+        VOL_INDENT=$(printf '%*s' "$PROP_INDENT" '')
+        VOL_ITEM_INDENT=$(printf '%*s' $((PROP_INDENT + 2)) '')
 
         if [ -n "$SERVICE_LINE" ]; then
-            NEXT_SERVICE=$(grep -n '^\s\{2,4\}[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | sed -n "2p" | cut -d: -f1)
+            NEXT_SERVICE=$(grep -n '^[[:space:]]*[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | sed -n "2p" | cut -d: -f1)
             [ -z "$NEXT_SERVICE" ] && NEXT_SERVICE=$(wc -l < "$DC")
 
-            VOLUMES_LINE=$(sed -n "${SERVICE_LINE},${NEXT_SERVICE}p" "$DC" | grep -n '^\s\{4,6\}volumes:' | head -1 | cut -d: -f1)
+            # Ищем volumes между SERVICE_LINE и NEXT_SERVICE
+            VOLUMES_LINE=$(sed -n "${SERVICE_LINE},${NEXT_SERVICE}p" "$DC" | grep -n "^${VOL_INDENT}volumes:" | head -1 | cut -d: -f1)
 
             if [ -n "$VOLUMES_LINE" ]; then
+                # volumes уже есть — добавляем в конец блока
                 ACTUAL_VOLUMES_LINE=$((SERVICE_LINE + VOLUMES_LINE - 1))
-                LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" 'NR > start && /^\s{4,6}[a-z_-]+:/ {print NR; exit}' "$DC")
-                [ -z "$LAST_VOLUME_LINE" ] && LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" 'NR > start && /^\s{0,5}[^ ]/ {print NR-1; exit}' "$DC")
+
+                # Ищем следующую строку с таким же отступом как volumes
+                LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" -v indent="$VOL_INDENT" 'NR > start && $0 ~ "^" indent "[a-z_-]+:" {print NR; exit}' "$DC")
+                [ -z "$LAST_VOLUME_LINE" ] && LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" -v indent="$VOL_INDENT" 'NR > start && length($0) > 0 && !/^[[:space:]]/ {print NR-1; exit}' "$DC")
                 [ -z "$LAST_VOLUME_LINE" ] && LAST_VOLUME_LINE=$(wc -l < "$DC")
 
-                awk -v line="$LAST_VOLUME_LINE" 'NR==line {print; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp" && mv "${DC}.tmp" "$DC"
+                awk -v line="$LAST_VOLUME_LINE" -v vol="$VOL_ITEM_INDENT- ./index.html:/opt/app/frontend/index.html" 'NR==line {print; print vol; next} 1' "$DC" > "${DC}.tmp" && mv "${DC}.tmp" "$DC"
                 echo "  → Volume mount добавлен в существующий блок volumes"
             else
-                awk -v line="$SERVICE_LINE" 'NR==line {print; print "    volumes:"; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp" && mv "${DC}.tmp" "$DC"
+                # volumes нет — создаём новый блок после SERVICE_LINE
+                awk -v line="$SERVICE_LINE" -v vol1="${VOL_INDENT}volumes:" -v vol2="${VOL_ITEM_INDENT}- ./index.html:/opt/app/frontend/index.html" 'NR==line {print; print vol1; print vol2; next} 1' "$DC" > "${DC}.tmp" && mv "${DC}.tmp" "$DC"
                 echo "  → Создан новый блок volumes с mount point"
             fi
         fi
