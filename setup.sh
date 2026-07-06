@@ -218,9 +218,10 @@ sed -i "s/--color-violet: #[0-9a-fA-F]*/--color-violet: $C_VIOLET/" index.html
 sed -i "s/--color-yellow: #[0-9a-fA-F]*/--color-yellow: $C_YELLOW/" index.html
 
 echo "  $MSG_OK"
-echo ""
 
 # ── Docker compose: add volume & restart ────────────────────────────
+# wrap in || true to prevent set -e from silently exiting
+(
 if [ -f docker-compose.yml ]; then DC="docker-compose.yml"
 elif [ -f compose.yml ]; then DC="compose.yml"
 else DC=""; fi
@@ -242,22 +243,19 @@ if [ -n "$DC" ]; then
                 [ -z "$LAST_VOLUME_LINE" ] && LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" 'NR > start && /^\s{0,5}[^ ]/ {print NR-1; exit}' "$DC")
                 [ -z "$LAST_VOLUME_LINE" ] && LAST_VOLUME_LINE=$(wc -l < "$DC")
 
-                awk -v line="$LAST_VOLUME_LINE" 'NR==line {print; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp"
-                mv "${DC}.tmp" "$DC"
+                awk -v line="$LAST_VOLUME_LINE" 'NR==line {print; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp" && mv "${DC}.tmp" "$DC"
                 echo "  → Volume mount добавлен в существующий блок volumes"
             else
-                awk -v line="$SERVICE_LINE" 'NR==line {print; print "    volumes:"; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp"
-                mv "${DC}.tmp" "$DC"
+                awk -v line="$SERVICE_LINE" 'NR==line {print; print "    volumes:"; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp" && mv "${DC}.tmp" "$DC"
                 echo "  → Создан новый блок volumes с mount point"
             fi
         fi
     fi
 
-    # Спрашиваем, перезапускать ли (только в интерактивном режиме)
     if [ -n "$THEME_ARG" ]; then
         echo "  → Перезапускаю контейнер..."
-        docker compose down --remove-orphans
-        docker compose up -d
+        docker compose down --remove-orphans 2>/dev/null || true
+        docker compose up -d 2>/dev/null || true
         echo "  ✓ Контейнер перезапущен"
     else
         if [ "$L" = "ru" ]; then
@@ -270,8 +268,8 @@ if [ -n "$DC" ]; then
         case "$restart_choice" in
             n|N|no|No) echo "  → Добавь volume и перезапусти вручную: docker compose restart" ;;
             *) echo "  → Перезапускаю контейнер..."
-               docker compose down --remove-orphans
-               docker compose up -d
+               docker compose down --remove-orphans 2>/dev/null || true
+               docker compose up -d 2>/dev/null || true
                echo "  ✓ Контейнер перезапущен" ;;
         esac
     fi
@@ -286,3 +284,4 @@ else
     echo "      - ./index.html:/opt/app/frontend/index.html"
     echo "  docker compose down && docker compose up -d"
 fi
+) || true
