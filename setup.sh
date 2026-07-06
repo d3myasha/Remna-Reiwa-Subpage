@@ -212,8 +212,8 @@ if [ "$MODE_CHOICE" = "light" ]; then
     PRIMARY_TEXT="#1e293b"
     case "$theme_choice" in
         1)
-            PRIMARY="#c4b5fd"; PRIMARY_RGB="196, 181, 253"; HOVER="#a78bfa"; BACKGROUND="#f3efff"; INFO="#a78bfa"; THEME_COLOR="#c4b5fd"
-            BG_GRADIENT_START="#ddd6fe"; BG_GRADIENT_MID="#ede9fe"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.18)"
+            PRIMARY="#c4b5fd"; PRIMARY_RGB="196, 181, 253"; HOVER="#a78bfa"; BACKGROUND="#ede9fe"; INFO="#a78bfa"; THEME_COLOR="#c4b5fd"
+            BG_GRADIENT_START="#8b5cf6"; BG_GRADIENT_MID="#ddd6fe"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.28)"
             C_BLUE="#93c5fd"; C_CYAN="#a5f3fc"; C_DARK="#e2e8f0"; C_GRAPE="#d8b4fe"; C_GRAY="#94a3b8"
             C_GREEN="#86efac"; C_INDIGO="#c7d2fe"; C_LIME="#d9f99d"; C_ORANGE="#fdba74"; C_PINK="#f9a8d4"
             C_RED="#fca5a5"; C_TEAL="#99f6e4"; C_VIOLET="#c4b5fd"; C_YELLOW="#fde68a"
@@ -223,8 +223,8 @@ if [ "$MODE_CHOICE" = "light" ]; then
             WARP_L4='                            [0.52, 0.32, 0.82],'
             ;;
         2)
-            PRIMARY="#d4d4d8"; PRIMARY_RGB="212, 212, 216"; HOVER="#a1a1aa"; BACKGROUND="#f4f4f5"; INFO="#a1a1aa"; THEME_COLOR="#d4d4d8"
-            BG_GRADIENT_START="#d4d4d8"; BG_GRADIENT_MID="#ececee"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.14)"
+            PRIMARY="#d4d4d8"; PRIMARY_RGB="212, 212, 216"; HOVER="#a1a1aa"; BACKGROUND="#e4e4e7"; INFO="#a1a1aa"; THEME_COLOR="#d4d4d8"
+            BG_GRADIENT_START="#a1a1aa"; BG_GRADIENT_MID="#e4e4e7"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(100, 116, 139, 0.22)"
             C_BLUE="#cbd5e1"; C_CYAN="#cbd5e1"; C_DARK="#e2e8f0"; C_GRAPE="#d4d4d8"; C_GRAY="#94a3b8"
             C_GREEN="#d4d4d8"; C_INDIGO="#cbd5e1"; C_LIME="#e4e4e7"; C_ORANGE="#d4d4d8"; C_PINK="#d4d4d8"
             C_RED="#fca5a5"; C_TEAL="#cbd5e1"; C_VIOLET="#d4d4d8"; C_YELLOW="#fde68a"
@@ -234,8 +234,8 @@ if [ "$MODE_CHOICE" = "light" ]; then
             WARP_L4='                            [0.58, 0.58, 0.65],'
             ;;
         3)
-            PRIMARY="#f9a8d4"; PRIMARY_RGB="249, 168, 212"; HOVER="#f472b6"; BACKGROUND="#fff5f9"; INFO="#7dd3fc"; THEME_COLOR="#f9a8d4"
-            BG_GRADIENT_START="#fbcfe8"; BG_GRADIENT_MID="#fce7f3"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.16)"
+            PRIMARY="#f9a8d4"; PRIMARY_RGB="249, 168, 212"; HOVER="#f472b6"; BACKGROUND="#fce7f3"; INFO="#7dd3fc"; THEME_COLOR="#f9a8d4"
+            BG_GRADIENT_START="#ec4899"; BG_GRADIENT_MID="#fbcfe8"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
             C_BLUE="#93c5fd"; C_CYAN="#a5f3fc"; C_DARK="#e2e8f0"; C_GRAPE="#f0abfc"; C_GRAY="#94a3b8"
             C_GREEN="#86efac"; C_INDIGO="#c4b5fd"; C_LIME="#d9f99d"; C_ORANGE="#fdba74"; C_PINK="#f9a8d4"
             C_RED="#fca5a5"; C_TEAL="#99f6e4"; C_VIOLET="#f9a8d4"; C_YELLOW="#fde68a"
@@ -245,8 +245,8 @@ if [ "$MODE_CHOICE" = "light" ]; then
             WARP_L4='                            [0.45, 0.78, 0.95],'
             ;;
         4)
-            PRIMARY="#6ee7b7"; PRIMARY_RGB="110, 231, 183"; HOVER="#34d399"; BACKGROUND="#ecfdf5"; INFO="#5eead4"; THEME_COLOR="#6ee7b7"
-            BG_GRADIENT_START="#a7f3d0"; BG_GRADIENT_MID="#d1fae5"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.16)"
+            PRIMARY="#6ee7b7"; PRIMARY_RGB="110, 231, 183"; HOVER="#34d399"; BACKGROUND="#d1fae5"; INFO="#5eead4"; THEME_COLOR="#6ee7b7"
+            BG_GRADIENT_START="#10b981"; BG_GRADIENT_MID="#a7f3d0"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
             C_BLUE="#93c5fd"; C_CYAN="#a5f3fc"; C_DARK="#e2e8f0"; C_GRAPE="#bbf7d0"; C_GRAY="#94a3b8"
             C_GREEN="#6ee7b7"; C_INDIGO="#c7d2fe"; C_LIME="#d9f99d"; C_ORANGE="#fdba74"; C_PINK="#f9a8d4"
             C_RED="#fca5a5"; C_TEAL="#99f6e4"; C_VIOLET="#a7f3d0"; C_YELLOW="#fde68a"
@@ -256,8 +256,8 @@ if [ "$MODE_CHOICE" = "light" ]; then
             WARP_L4='                            [0.55, 0.92, 0.75],'
             ;;
         5)
-            PRIMARY="#fcd34d"; PRIMARY_RGB="252, 211, 77"; HOVER="#fbbf24"; BACKGROUND="#fffbeb"; INFO="#fdba74"; THEME_COLOR="#fcd34d"
-            BG_GRADIENT_START="#fde68a"; BG_GRADIENT_MID="#fef3c7"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.16)"
+            PRIMARY="#fcd34d"; PRIMARY_RGB="252, 211, 77"; HOVER="#fbbf24"; BACKGROUND="#fef3c7"; INFO="#fdba74"; THEME_COLOR="#fcd34d"
+            BG_GRADIENT_START="#f59e0b"; BG_GRADIENT_MID="#fde68a"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
             C_BLUE="#93c5fd"; C_CYAN="#a5f3fc"; C_DARK="#e2e8f0"; C_GRAPE="#fde68a"; C_GRAY="#94a3b8"
             C_GREEN="#86efac"; C_INDIGO="#c7d2fe"; C_LIME="#fde68a"; C_ORANGE="#fdba74"; C_PINK="#f9a8d4"
             C_RED="#fca5a5"; C_TEAL="#99f6e4"; C_VIOLET="#fcd34d"; C_YELLOW="#fde68a"
@@ -267,8 +267,8 @@ if [ "$MODE_CHOICE" = "light" ]; then
             WARP_L4='                            [0.88, 0.65, 0.22],'
             ;;
         6)
-            PRIMARY="#93c5fd"; PRIMARY_RGB="147, 197, 253"; HOVER="#60a5fa"; BACKGROUND="#eff6ff"; INFO="#7dd3fc"; THEME_COLOR="#93c5fd"
-            BG_GRADIENT_START="#bfdbfe"; BG_GRADIENT_MID="#dbeafe"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.16)"
+            PRIMARY="#93c5fd"; PRIMARY_RGB="147, 197, 253"; HOVER="#60a5fa"; BACKGROUND="#dbeafe"; INFO="#7dd3fc"; THEME_COLOR="#93c5fd"
+            BG_GRADIENT_START="#3b82f6"; BG_GRADIENT_MID="#93c5fd"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
             C_BLUE="#93c5fd"; C_CYAN="#a5f3fc"; C_DARK="#e2e8f0"; C_GRAPE="#c7d2fe"; C_GRAY="#94a3b8"
             C_GREEN="#86efac"; C_INDIGO="#a5b4fc"; C_LIME="#d9f99d"; C_ORANGE="#fdba74"; C_PINK="#f9a8d4"
             C_RED="#fca5a5"; C_TEAL="#99f6e4"; C_VIOLET="#93c5fd"; C_YELLOW="#fde68a"
@@ -278,8 +278,8 @@ if [ "$MODE_CHOICE" = "light" ]; then
             WARP_L4='                            [0.55, 0.78, 0.98],'
             ;;
         7)
-            PRIMARY="#fbcfe8"; PRIMARY_RGB="251, 207, 232"; HOVER="#f9a8d4"; BACKGROUND="#fdf2f8"; INFO="#f9a8d4"; THEME_COLOR="#fbcfe8"
-            BG_GRADIENT_START="#f9a8d4"; BG_GRADIENT_MID="#fce7f3"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.18)"
+            PRIMARY="#fbcfe8"; PRIMARY_RGB="251, 207, 232"; HOVER="#f9a8d4"; BACKGROUND="#fce7f3"; INFO="#f9a8d4"; THEME_COLOR="#fbcfe8"
+            BG_GRADIENT_START="#db2777"; BG_GRADIENT_MID="#f9a8d4"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.28)"
             C_BLUE="#93c5fd"; C_CYAN="#fda4af"; C_DARK="#e2e8f0"; C_GRAPE="#f5d0fe"; C_GRAY="#94a3b8"
             C_GREEN="#86efac"; C_INDIGO="#ddd6fe"; C_LIME="#fde68a"; C_ORANGE="#fdba74"; C_PINK="#fbcfe8"
             C_RED="#fca5a5"; C_TEAL="#fbcfe8"; C_VIOLET="#f0abfc"; C_YELLOW="#fde68a"

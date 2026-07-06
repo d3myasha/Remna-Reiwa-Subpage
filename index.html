@@ -401,6 +401,13 @@
     --primary-text: #1e293b;
 }
 
+.light-theme body::before {
+    background:
+        radial-gradient(ellipse 55% 45% at 12% 8%, var(--bg-glow), transparent 62%),
+        radial-gradient(ellipse 50% 40% at 88% 92%, rgba(var(--primary-rgb), 0.14), transparent 58%);
+    opacity: 1;
+}
+
 .light-theme .platform-tabs {
     background: var(--panel-bg);
     border: 1px solid rgba(var(--primary-rgb), 0.28);
