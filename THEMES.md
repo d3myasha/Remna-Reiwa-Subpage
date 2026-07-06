@@ -1,27 +1,5 @@
 # 🎨 Темы оформления
 
-Установка: `bash setup.sh -t N` (тёмная) или `bash setup.sh -t N -m light` (светлая).
-
-| Тема | `-t` |
-|------|------|
-| Purple (по умолчанию) | 1 |
-| Monochrome | 2 |
-| Cyberpunk | 3 |
-| Emerald | 4 |
-| Amber | 5 |
-| Ocean | 6 |
-| Blush | 7 |
-| Red | 8 |
-| Grape | 9 |
-| Teal | 10 |
-| Yellow | 11 |
-
-Темы **8–11** на палитре [Open Color](https://github.com/yeun/open-color).
-
-Скрины в `assets/`: `{имя}-dark.png` и `{имя}-light.png`.
-
----
-
 ### 1. Purple
 
 | Тёмная | Светлая |
