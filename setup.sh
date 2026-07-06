@@ -22,7 +22,7 @@ while getopts "t:l:" opt; do
     case "$opt" in
         t) THEME_ARG="$OPTARG" ;;
         l) LANG_ARG="$OPTARG" ;;
-        *) echo "Usage: bash setup.sh [-t theme(1-6)] [-l en|ru]"; exit 1 ;;
+        *) echo "Usage: bash setup.sh [-t theme(1-7)] [-l en|ru]"; exit 1 ;;
     esac
 done
 
@@ -59,6 +59,7 @@ if [ "$L" = "ru" ]; then
         "Emerald — изумрудный"
         "Amber — янтарный"
         "Ocean — синий"
+        "Blush — светло-розовый"
     )
 else
     MSG_THEME="Select theme:"
@@ -72,6 +73,7 @@ else
         "Emerald (green)"
         "Amber (warm orange)"
         "Ocean (blue)"
+        "Blush (light pink)"
     )
 fi
 
@@ -89,7 +91,7 @@ else
     while true; do
         read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice
         case "$theme_choice" in
-            1|2|3|4|5|6) break ;;
+            1|2|3|4|5|6|7) break ;;
             *) echo "  $MSG_INVALID" ;;
         esac
     done
@@ -162,6 +164,17 @@ case "$theme_choice" in
         WARP_L2='                            [0.3, 0.6, 1.0],'
         WARP_L3='                            [0.02, 0.04, 0.08],'
         WARP_L4='                            [0.6, 0.85, 1.0],'
+        ;;
+    7) # Blush — soft light pink on dark rose-tinted base
+        PRIMARY="#f9a8d4"; PRIMARY_RGB="249, 168, 212"; HOVER="#fbcfe8"; BACKGROUND="#10080c"; INFO="#f9a8d4"; THEME_COLOR="#f9a8d4"
+        BG_GRADIENT_START="#2d1520"; BG_GRADIENT_MID="#12080c"; BG_GRADIENT_END="#080406"; BG_GLOW="rgba(var(--primary-rgb), 0.08)"
+        C_BLUE="#93c5fd"; C_CYAN="#fda4af"; C_DARK="#1a0f14"; C_GRAPE="#f0abfc"; C_GRAY="#9ca3af"
+        C_GREEN="#86efac"; C_INDIGO="#c4b5fd"; C_LIME="#fde68a"; C_ORANGE="#fdba74"; C_PINK="#f9a8d4"
+        C_RED="#fca5a5"; C_TEAL="#fbcfe8"; C_VIOLET="#e879f9"; C_YELLOW="#fde68a"
+        WARP_L1='                            [0.06, 0.03, 0.05],'
+        WARP_L2='                            [0.98, 0.66, 0.83],'
+        WARP_L3='                            [0.06, 0.03, 0.05],'
+        WARP_L4='                            [0.85, 0.45, 0.65],'
         ;;
     *)
         echo "  $MSG_INVALID"

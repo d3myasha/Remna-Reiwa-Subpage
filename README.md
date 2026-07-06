@@ -21,7 +21,7 @@
 
 ### 🎨 Визуал
 - **WebGL2 Warp-шейдер** — динамический анимированный фон
-- **6 встроенных тем** — Purple, Monochrome, Cyberpunk, Emerald, Amber, Ocean
+- **7 встроенных тем** — Purple, Monochrome, Cyberpunk, Emerald, Amber, Ocean, Blush
 - **Адаптивный дизайн** — работает на мобильных и десктопе
 - **Тёмная тема** — оптимизирована для тёмного режима
 
@@ -62,6 +62,9 @@
 ### Ocean
 <img src="assets/Ocean.png" alt="Ocean Theme" width="700">
 
+### Blush (светло-розовая)
+<img src="assets/Blush.png" alt="Blush Theme" width="700">
+
 </div>
 
 ---
@@ -84,7 +87,7 @@ bash setup.sh -t 3              # Тема Cyberpunk
 bash setup.sh -t 2 -l ru        # Тема Monochrome + русский язык
 ```
 
-**Доступные темы:** `1` Purple • `2` Monochrome • `3` Cyberpunk • `4` Emerald • `5` Amber • `6` Ocean
+**Доступные темы:** `1` Purple • `2` Monochrome • `3` Cyberpunk • `4` Emerald • `5` Amber • `6` Ocean • `7` Blush (светло-розовая)
 
 ---
 
