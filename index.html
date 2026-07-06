@@ -2019,28 +2019,41 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             mainContent.innerHTML = html;
             mainContent.classList.add('loaded');
             attachEventListeners();
-            // Warp effect on subscription info card (async, safe if module not yet loaded)
-            requestAnimationFrame(() => {
-                const el = document.getElementById('subscription-info-card');
-                if (el && typeof window.initWarpEffect === 'function') {
-                    window.initWarpEffect(el, {
-                        speed: 0.8,
-                        proportion: 0.55,
-                        distortion: 0.12,
-                        swirlIterations: 13,
-                        shape: 1, // stripes
-                        softness: 0.8,
-                        swirl: 1.0,
-                        shapeScale: 0.05,
-                        colors: [
-                            [0.07, 0.07, 0.07],   // rgb(18,18,18)
-                            [0.58, 0.44, 1.0],    // rgb(148,112,255)
-                            [0.07, 0.07, 0.07],   // rgb(18,18,18)
-                            [0.53, 0.22, 1.0],    // rgb(136,56,255)
-                        ],
-                    });
-                }
-            });
+            // Warp effect on subscription info card — lazy init via IntersectionObserver
+            // Effect renders only when card is visible, cleans up when scrolled off screen
+            const warpCard = document.getElementById('subscription-info-card');
+            if (warpCard && typeof window.initWarpEffect === 'function') {
+                const obs = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting) {
+                            if (!warpCard._warpInitialized) {
+                                window.initWarpEffect(warpCard, {
+                                    speed: 0.8,
+                                    proportion: 0.55,
+                                    distortion: 0.12,
+                                    swirlIterations: 13,
+                                    shape: 1,
+                                    softness: 0.8,
+                                    swirl: 1.0,
+                                    shapeScale: 0.05,
+                                    colors: [
+                                        [0.07, 0.07, 0.07],
+                                        [0.58, 0.44, 1.0],
+                                        [0.07, 0.07, 0.07],
+                                        [0.53, 0.22, 1.0],
+                                    ],
+                                });
+                            }
+                        } else {
+                            if (warpCard._warpCleanup) {
+                                warpCard._warpCleanup();
+                                warpCard._warpInitialized = false;
+                            }
+                        }
+                    }
+                }, { threshold: 0.1 });
+                obs.observe(warpCard);
+            }
         }
 
         function renderSubscriptionInfo(blockType) {
