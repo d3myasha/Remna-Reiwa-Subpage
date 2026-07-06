@@ -332,10 +332,10 @@
     --error: #fca5a5;
     --info: #7c3aed;
     --primary-rgb: 124, 58, 237;
-    --card-bg: var(--card-bg);
-    --panel-bg: var(--panel-bg);
-    --elevated-bg: var(--elevated-bg);
-    --elevated-bg-hover: var(--elevated-bg-hover);
+    --card-bg: rgba(24, 24, 27, 0.50);
+    --panel-bg: rgba(24, 24, 27, 0.70);
+    --elevated-bg: rgba(39, 39, 42, 0.50);
+    --elevated-bg-hover: rgba(39, 39, 42, 0.80);
     --border-strong: rgba(255, 255, 255, 0.08);
     --divider: rgba(255, 255, 255, 0.06);
     --border-hover: rgba(255, 255, 255, 0.12);
@@ -380,6 +380,10 @@
     --text-primary: #e2e8f0;
     --text-secondary: #9ca3af;
     --text-muted: #6b7280;
+    --card-bg: rgba(24, 24, 27, 0.50);
+    --panel-bg: rgba(24, 24, 27, 0.70);
+    --elevated-bg: rgba(39, 39, 42, 0.50);
+    --elevated-bg-hover: rgba(39, 39, 42, 0.80);
 }
 
 .light-theme {
@@ -392,9 +396,9 @@
     --text-primary: #0f172a;
     --text-secondary: #475569;
     --text-muted: #64748b;
-    --card-bg: rgba(255, 255, 255, 0.88);
-    --panel-bg: rgba(255, 255, 255, 0.98);
-    --elevated-bg: rgba(248, 250, 252, 0.96);
+    --card-bg: #ffffff;
+    --panel-bg: #ffffff;
+    --elevated-bg: #f8fafc;
     --elevated-bg-hover: #ffffff;
     --shadow: 0 4px 24px rgba(15, 23, 42, 0.10);
     --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.14);
@@ -727,6 +731,11 @@ body::before {
 
 /* Installation Section */
 .apps-section { margin-bottom: 20px; width: 100%; min-width: 0; box-sizing: border-box; }
+.card.apps-section {
+    background: var(--panel-bg);
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
+}
 #appsContainer { width: 100%; min-width: 0; box-sizing: border-box; }
 .platform-tabs {
     display: flex;
