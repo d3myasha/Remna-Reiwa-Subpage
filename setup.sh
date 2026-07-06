@@ -8,6 +8,7 @@ set -euo pipefail
 #   bash setup.sh              # interactive prompts
 #   bash setup.sh -t 3        # skip prompts, set theme directly
 #   bash setup.sh -t 2 -l ru  # theme + language
+#   bash setup.sh -t 1 -m light  # Purple light variant
 #
 # One-liner (download + run):
 #   curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh -t 3
@@ -18,11 +19,13 @@ REPO_URL="https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main"
 # ── Argument parsing ─────────────────────────────────────────────────────
 THEME_ARG=""
 LANG_ARG=""
-while getopts "t:l:" opt; do
+MODE_ARG=""
+while getopts "t:l:m:" opt; do
     case "$opt" in
         t) THEME_ARG="$OPTARG" ;;
         l) LANG_ARG="$OPTARG" ;;
-        *) echo "Usage: bash setup.sh [-t theme(1-7)] [-l en|ru]"; exit 1 ;;
+        m) MODE_ARG="$OPTARG" ;;
+        *) echo "Usage: bash setup.sh [-t theme(1-7)] [-m dark|light] [-l en|ru]"; exit 1 ;;
     esac
 done
 
@@ -97,7 +100,30 @@ else
     done
 fi
 
+# ── Appearance mode (dark / light) ───────────────────────────────────────
+if [ "$MODE_ARG" = "light" ] || [ "$MODE_ARG" = "dark" ]; then
+    MODE_CHOICE="$MODE_ARG"
+elif [ -t 0 ]; then
+    echo ""
+    if [ "$L" = "ru" ]; then
+        echo "  Режим оформления:"
+        echo "    1) Тёмный"
+        echo "    2) Светлый (белая вариация)"
+        read -rp "  > " mode_pick
+        [ "$mode_pick" = "2" ] && MODE_CHOICE="light" || MODE_CHOICE="dark"
+    else
+        echo "  Appearance mode:"
+        echo "    1) Dark"
+        echo "    2) Light (white variant)"
+        read -rp "  > " mode_pick
+        [ "$mode_pick" = "2" ] && MODE_CHOICE="light" || MODE_CHOICE="dark"
+    fi
+else
+    MODE_CHOICE="dark"
+fi
+
 # ── Theme config ─────────────────────────────────────────────────────────
+PRIMARY_TEXT="#0a0a0a"
 case "$theme_choice" in
     1) # Default (Purple)
         PRIMARY="#c084fc"; PRIMARY_RGB="192, 132, 252"; HOVER="#a78bfa"; BACKGROUND="#0a0812"; INFO="#c084fc"; THEME_COLOR="#c084fc"
@@ -182,6 +208,89 @@ case "$theme_choice" in
         ;;
 esac
 
+if [ "$MODE_CHOICE" = "light" ]; then
+    PRIMARY_TEXT="#ffffff"
+    case "$theme_choice" in
+        1)
+            PRIMARY="#7c3aed"; PRIMARY_RGB="124, 58, 237"; HOVER="#6d28d9"; BACKGROUND="#f5f3ff"; INFO="#7c3aed"; THEME_COLOR="#7c3aed"
+            BG_GRADIENT_START="#ede9fe"; BG_GRADIENT_MID="#f5f3ff"; BG_GRADIENT_END="#faf5ff"; BG_GLOW="rgba(var(--primary-rgb), 0.12)"
+            C_BLUE="#2563eb"; C_CYAN="#0891b2"; C_DARK="#1e293b"; C_GRAPE="#7c3aed"; C_GRAY="#64748b"
+            C_GREEN="#059669"; C_INDIGO="#4f46e5"; C_LIME="#65a30d"; C_ORANGE="#ea580c"; C_PINK="#db2777"
+            C_RED="#dc2626"; C_TEAL="#0d9488"; C_VIOLET="#7c3aed"; C_YELLOW="#ca8a04"
+            WARP_L1='                            [0.95, 0.93, 1.0],'
+            WARP_L2='                            [0.55, 0.35, 0.95],'
+            WARP_L3='                            [0.98, 0.96, 1.0],'
+            WARP_L4='                            [0.75, 0.55, 1.0],'
+            ;;
+        2)
+            PRIMARY="#52525b"; PRIMARY_RGB="82, 82, 91"; HOVER="#3f3f46"; BACKGROUND="#fafafa"; INFO="#71717a"; THEME_COLOR="#52525b"
+            BG_GRADIENT_START="#f4f4f5"; BG_GRADIENT_MID="#fafafa"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.08)"
+            C_BLUE="#71717a"; C_CYAN="#71717a"; C_DARK="#27272a"; C_GRAPE="#52525b"; C_GRAY="#a1a1aa"
+            C_GREEN="#71717a"; C_INDIGO="#71717a"; C_LIME="#a1a1aa"; C_ORANGE="#52525b"; C_PINK="#71717a"
+            C_RED="#b91c1c"; C_TEAL="#71717a"; C_VIOLET="#52525b"; C_YELLOW="#a16207"
+            WARP_L1='                            [0.98, 0.98, 0.98],'
+            WARP_L2='                            [0.75, 0.75, 0.78],'
+            WARP_L3='                            [1.0, 1.0, 1.0],'
+            WARP_L4='                            [0.55, 0.55, 0.58],'
+            ;;
+        3)
+            PRIMARY="#db2777"; PRIMARY_RGB="219, 39, 119"; HOVER="#be185d"; BACKGROUND="#fff1f2"; INFO="#0891b2"; THEME_COLOR="#db2777"
+            BG_GRADIENT_START="#ffe4e6"; BG_GRADIENT_MID="#fff1f2"; BG_GRADIENT_END="#fdf2f8"; BG_GLOW="rgba(var(--primary-rgb), 0.10)"
+            C_BLUE="#0284c7"; C_CYAN="#06b6d4"; C_DARK="#1e1b4b"; C_GRAPE="#db2777"; C_GRAY="#64748b"
+            C_GREEN="#059669"; C_INDIGO="#7c3aed"; C_LIME="#65a30d"; C_ORANGE="#ea580c"; C_PINK="#db2777"
+            C_RED="#dc2626"; C_TEAL="#0d9488"; C_VIOLET="#db2777"; C_YELLOW="#ca8a04"
+            WARP_L1='                            [1.0, 0.96, 0.98],'
+            WARP_L2='                            [0.95, 0.2, 0.55],'
+            WARP_L3='                            [0.98, 0.94, 0.97],'
+            WARP_L4='                            [0.0, 0.7, 0.85],'
+            ;;
+        4)
+            PRIMARY="#059669"; PRIMARY_RGB="5, 150, 105"; HOVER="#047857"; BACKGROUND="#ecfdf5"; INFO="#059669"; THEME_COLOR="#059669"
+            BG_GRADIENT_START="#d1fae5"; BG_GRADIENT_MID="#ecfdf5"; BG_GRADIENT_END="#f0fdf4"; BG_GLOW="rgba(var(--primary-rgb), 0.10)"
+            C_BLUE="#0284c7"; C_CYAN="#0d9488"; C_DARK="#064e3b"; C_GRAPE="#10b981"; C_GRAY="#64748b"
+            C_GREEN="#059669"; C_INDIGO="#4f46e5"; C_LIME="#65a30d"; C_ORANGE="#ea580c"; C_PINK="#db2777"
+            C_RED="#dc2626"; C_TEAL="#0f766e"; C_VIOLET="#059669"; C_YELLOW="#ca8a04"
+            WARP_L1='                            [0.94, 0.99, 0.96],'
+            WARP_L2='                            [0.15, 0.75, 0.45],'
+            WARP_L3='                            [0.97, 1.0, 0.98],'
+            WARP_L4='                            [0.35, 0.9, 0.6],'
+            ;;
+        5)
+            PRIMARY="#d97706"; PRIMARY_RGB="217, 119, 6"; HOVER="#b45309"; BACKGROUND="#fffbeb"; INFO="#d97706"; THEME_COLOR="#d97706"
+            BG_GRADIENT_START="#fef3c7"; BG_GRADIENT_MID="#fffbeb"; BG_GRADIENT_END="#fff7ed"; BG_GLOW="rgba(var(--primary-rgb), 0.10)"
+            C_BLUE="#2563eb"; C_CYAN="#0891b2"; C_DARK="#431407"; C_GRAPE="#f59e0b"; C_GRAY="#78716c"
+            C_GREEN="#65a30d"; C_INDIGO="#4f46e5"; C_LIME="#ca8a04"; C_ORANGE="#ea580c"; C_PINK="#db2777"
+            C_RED="#dc2626"; C_TEAL="#0d9488"; C_VIOLET="#d97706"; C_YELLOW="#eab308"
+            WARP_L1='                            [1.0, 0.98, 0.94],'
+            WARP_L2='                            [0.95, 0.65, 0.15],'
+            WARP_L3='                            [1.0, 0.99, 0.96],'
+            WARP_L4='                            [0.85, 0.55, 0.1],'
+            ;;
+        6)
+            PRIMARY="#2563eb"; PRIMARY_RGB="37, 99, 235"; HOVER="#1d4ed8"; BACKGROUND="#eff6ff"; INFO="#2563eb"; THEME_COLOR="#2563eb"
+            BG_GRADIENT_START="#dbeafe"; BG_GRADIENT_MID="#eff6ff"; BG_GRADIENT_END="#f8fafc"; BG_GLOW="rgba(var(--primary-rgb), 0.10)"
+            C_BLUE="#2563eb"; C_CYAN="#0891b2"; C_DARK="#0f172a"; C_GRAPE="#6366f1"; C_GRAY="#64748b"
+            C_GREEN="#059669"; C_INDIGO="#4f46e5"; C_LIME="#65a30d"; C_ORANGE="#ea580c"; C_PINK="#db2777"
+            C_RED="#dc2626"; C_TEAL="#0d9488"; C_VIOLET="#2563eb"; C_YELLOW="#ca8a04"
+            WARP_L1='                            [0.94, 0.97, 1.0],'
+            WARP_L2='                            [0.25, 0.55, 0.95],'
+            WARP_L3='                            [0.97, 0.99, 1.0],'
+            WARP_L4='                            [0.55, 0.75, 1.0],'
+            ;;
+        7)
+            PRIMARY="#ec4899"; PRIMARY_RGB="236, 72, 153"; HOVER="#db2777"; BACKGROUND="#fdf2f8"; INFO="#ec4899"; THEME_COLOR="#ec4899"
+            BG_GRADIENT_START="#fce7f3"; BG_GRADIENT_MID="#fdf2f8"; BG_GRADIENT_END="#fff1f2"; BG_GLOW="rgba(var(--primary-rgb), 0.12)"
+            C_BLUE="#2563eb"; C_CYAN="#f472b6"; C_DARK="#500724"; C_GRAPE="#d946ef"; C_GRAY="#64748b"
+            C_GREEN="#059669"; C_INDIGO="#8b5cf6"; C_LIME="#ca8a04"; C_ORANGE="#fb923c"; C_PINK="#ec4899"
+            C_RED="#e11d48"; C_TEAL="#f9a8d4"; C_VIOLET="#ec4899"; C_YELLOW="#eab308"
+            WARP_L1='                            [1.0, 0.96, 0.98],'
+            WARP_L2='                            [0.95, 0.55, 0.75],'
+            WARP_L3='                            [0.99, 0.94, 0.97],'
+            WARP_L4='                            [0.9, 0.45, 0.65],'
+            ;;
+    esac
+fi
+
 # ── Download or use local ─────────────────────────────────────────────────
 echo ""
 if [ -f index.html ]; then
@@ -194,6 +303,7 @@ fi
 # ── Patch CSS variables ──────────────────────────────────────────────────
 sed -i "s/--primary-color: #[0-9a-fA-F]*/--primary-color: $PRIMARY/" index.html
 sed -i "s/--primary-hover: #[0-9a-fA-F]*/--primary-hover: $HOVER/" index.html
+sed -i "s/--primary-text: #[0-9a-fA-F]*/--primary-text: $PRIMARY_TEXT/" index.html
 sed -i "s/--background: #[0-9a-fA-F]*/--background: $BACKGROUND/" index.html
 sed -i "s/--info: #[0-9a-fA-F]*/--info: $INFO/" index.html
 sed -i "s|content=\"#[0-9a-fA-F]*\" id=\"themeColor\"|content=\"$THEME_COLOR\" id=\"themeColor\"|" index.html
@@ -229,6 +339,12 @@ sed -i "s/--color-red: #[0-9a-fA-F]*/--color-red: $C_RED/" index.html
 sed -i "s/--color-teal: #[0-9a-fA-F]*/--color-teal: $C_TEAL/" index.html
 sed -i "s/--color-violet: #[0-9a-fA-F]*/--color-violet: $C_VIOLET/" index.html
 sed -i "s/--color-yellow: #[0-9a-fA-F]*/--color-yellow: $C_YELLOW/" index.html
+
+if [ "$MODE_CHOICE" = "light" ]; then
+    sed -i "s/document.documentElement.classList.add('dark-theme');/document.documentElement.classList.add('light-theme');/" index.html
+else
+    sed -i "s/document.documentElement.classList.add('light-theme');/document.documentElement.classList.add('dark-theme');/" index.html
+fi
 
 echo "  $MSG_OK"
 

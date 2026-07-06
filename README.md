@@ -23,7 +23,7 @@
 - **WebGL2 Warp-шейдер** — динамический анимированный фон
 - **7 встроенных тем** — Purple, Monochrome, Cyberpunk, Emerald, Amber, Ocean, Blush
 - **Адаптивный дизайн** — работает на мобильных и десктопе
-- **Тёмная тема** — оптимизирована для тёмного режима
+- **Тёмная и светлая вариация** — для каждой из 7 палитр (выбор при установке)
 
 </td>
 <td width="50%">
@@ -83,11 +83,12 @@ curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/mai
 ### Неинтерактивно (с выбором темы)
 
 ```bash
-bash setup.sh -t 3              # Тема Cyberpunk
+bash setup.sh -t 3              # Тема Cyberpunk (тёмная)
+bash setup.sh -t 1 -m light     # Purple, светлая вариация
 bash setup.sh -t 2 -l ru        # Тема Monochrome + русский язык
 ```
 
-**Доступные темы:** `1` Purple • `2` Monochrome • `3` Cyberpunk • `4` Emerald • `5` Amber • `6` Ocean • `7` Blush (светло-розовая)
+**Темы:** `1`–`7` (Purple … Blush). **Режим:** `-m dark` (по умолчанию) или `-m light` — белая вариация той же палитры.
 
 ---
 
