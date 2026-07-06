@@ -21,7 +21,7 @@
 
 ### 🎨 Визуал
 - **WebGL2 Warp-шейдер** — динамический анимированный фон
-- **7 встроенных тем** — Purple, Monochrome, Cyberpunk, Emerald, Amber, Ocean, Blush
+- **11 встроенных тем** — Purple … Blush + [Open Color](https://github.com/yeun/open-color) (Red, Grape, Teal, Yellow)
 - **Адаптивный дизайн** — работает на мобильных и десктопе
 - **Тёмная и светлая вариация** — для каждой из 7 палитр (выбор при установке)
 

@@ -25,7 +25,7 @@ while getopts "t:l:m:" opt; do
         t) THEME_ARG="$OPTARG" ;;
         l) LANG_ARG="$OPTARG" ;;
         m) MODE_ARG="$OPTARG" ;;
-        *) echo "Usage: bash setup.sh [-t theme(1-7)] [-m dark|light] [-l en|ru]"; exit 1 ;;
+        *) echo "Usage: bash setup.sh [-t theme(1-11)] [-m dark|light] [-l en|ru]"; exit 1 ;;
     esac
 done
 
@@ -63,6 +63,10 @@ if [ "$L" = "ru" ]; then
         "Amber — янтарный"
         "Ocean — синий"
         "Blush — светло-розовый"
+        "Open Red — красный (open-color)"
+        "Open Grape — виноград (open-color)"
+        "Open Teal — бирюза (open-color)"
+        "Open Yellow — жёлтый (open-color)"
     )
 else
     MSG_THEME="Select theme:"
@@ -77,6 +81,10 @@ else
         "Amber (warm orange)"
         "Ocean (blue)"
         "Blush (light pink)"
+        "Open Red (open-color)"
+        "Open Grape (open-color)"
+        "Open Teal (open-color)"
+        "Open Yellow (open-color)"
     )
 fi
 
@@ -94,7 +102,7 @@ else
     while true; do
         read -rp "  Theme [1-${#THEMES[@]}]: " theme_choice
         case "$theme_choice" in
-            1|2|3|4|5|6|7) break ;;
+            1|2|3|4|5|6|7|8|9|10|11) break ;;
             *) echo "  $MSG_INVALID" ;;
         esac
     done
@@ -202,6 +210,50 @@ case "$theme_choice" in
         WARP_L3='                            [0.06, 0.03, 0.05],'
         WARP_L4='                            [0.85, 0.45, 0.65],'
         ;;
+    8) # Open Color — Red
+        PRIMARY="#ff6b6b"; PRIMARY_RGB="255, 107, 107"; HOVER="#fa5252"; BACKGROUND="#140808"; INFO="#ff6b6b"; THEME_COLOR="#ff6b6b"
+        BG_GRADIENT_START="#5c1010"; BG_GRADIENT_MID="#1a0909"; BG_GRADIENT_END="#0a0505"; BG_GLOW="rgba(var(--primary-rgb), 0.08)"
+        C_BLUE="#4dabf7"; C_CYAN="#3bc9db"; C_DARK="#343a40"; C_GRAPE="#da77f2"; C_GRAY="#868e96"
+        C_GREEN="#51cf66"; C_INDIGO="#5c7cfa"; C_LIME="#94d82d"; C_ORANGE="#ff922b"; C_PINK="#f783ac"
+        C_RED="#ff6b6b"; C_TEAL="#38d9a9"; C_VIOLET="#9775fa"; C_YELLOW="#fcc419"
+        WARP_L1='                            [0.08, 0.02, 0.02],'
+        WARP_L2='                            [1.0, 0.42, 0.42],'
+        WARP_L3='                            [0.08, 0.02, 0.02],'
+        WARP_L4='                            [0.88, 0.18, 0.18],'
+        ;;
+    9) # Open Color — Grape
+        PRIMARY="#cc5de8"; PRIMARY_RGB="204, 93, 232"; HOVER="#be4bdb"; BACKGROUND="#100818"; INFO="#cc5de8"; THEME_COLOR="#cc5de8"
+        BG_GRADIENT_START="#3d1550"; BG_GRADIENT_MID="#12081a"; BG_GRADIENT_END="#08040c"; BG_GLOW="rgba(var(--primary-rgb), 0.08)"
+        C_BLUE="#4dabf7"; C_CYAN="#3bc9db"; C_DARK="#343a40"; C_GRAPE="#cc5de8"; C_GRAY="#868e96"
+        C_GREEN="#51cf66"; C_INDIGO="#748ffc"; C_LIME="#94d82d"; C_ORANGE="#ff922b"; C_PINK="#f06595"
+        C_RED="#ff6b6b"; C_TEAL="#38d9a9"; C_VIOLET="#9775fa"; C_YELLOW="#fcc419"
+        WARP_L1='                            [0.06, 0.02, 0.08],'
+        WARP_L2='                            [0.80, 0.36, 0.92],'
+        WARP_L3='                            [0.06, 0.02, 0.08],'
+        WARP_L4='                            [0.68, 0.22, 0.78],'
+        ;;
+    10) # Open Color — Teal
+        PRIMARY="#20c997"; PRIMARY_RGB="32, 201, 151"; HOVER="#12b886"; BACKGROUND="#051210"; INFO="#20c997"; THEME_COLOR="#20c997"
+        BG_GRADIENT_START="#0a3d32"; BG_GRADIENT_MID="#051210"; BG_GRADIENT_END="#020a08"; BG_GLOW="rgba(var(--primary-rgb), 0.08)"
+        C_BLUE="#4dabf7"; C_CYAN="#22b8cf"; C_DARK="#343a40"; C_GRAPE="#da77f2"; C_GRAY="#868e96"
+        C_GREEN="#40c057"; C_INDIGO="#5c7cfa"; C_LIME="#94d82d"; C_ORANGE="#ff922b"; C_PINK="#f783ac"
+        C_RED="#ff6b6b"; C_TEAL="#20c997"; C_VIOLET="#9775fa"; C_YELLOW="#fcc419"
+        WARP_L1='                            [0.02, 0.06, 0.05],'
+        WARP_L2='                            [0.12, 0.80, 0.58],'
+        WARP_L3='                            [0.02, 0.06, 0.05],'
+        WARP_L4='                            [0.22, 0.95, 0.72],'
+        ;;
+    11) # Open Color — Yellow
+        PRIMARY="#fcc419"; PRIMARY_RGB="252, 196, 25"; HOVER="#fab005"; BACKGROUND="#121008"; INFO="#fcc419"; THEME_COLOR="#fcc419"
+        BG_GRADIENT_START="#3d3010"; BG_GRADIENT_MID="#121008"; BG_GRADIENT_END="#0a0804"; BG_GLOW="rgba(var(--primary-rgb), 0.08)"
+        C_BLUE="#4dabf7"; C_CYAN="#3bc9db"; C_DARK="#343a40"; C_GRAPE="#da77f2"; C_GRAY="#868e96"
+        C_GREEN="#51cf66"; C_INDIGO="#748ffc"; C_LIME="#94d82d"; C_ORANGE="#ff922b"; C_PINK="#f783ac"
+        C_RED="#ff6b6b"; C_TEAL="#38d9a9"; C_VIOLET="#9775fa"; C_YELLOW="#fcc419"
+        WARP_L1='                            [0.08, 0.06, 0.02],'
+        WARP_L2='                            [0.98, 0.77, 0.10],'
+        WARP_L3='                            [0.08, 0.06, 0.02],'
+        WARP_L4='                            [0.92, 0.62, 0.05],'
+        ;;
     *)
         echo "  $MSG_INVALID"
         exit 1
@@ -287,6 +339,50 @@ if [ "$MODE_CHOICE" = "light" ]; then
             WARP_L2='                            [0.88, 0.48, 0.72],'
             WARP_L3='                            [0.99, 0.97, 0.99],'
             WARP_L4='                            [0.82, 0.38, 0.62],'
+            ;;
+        8)
+            PRIMARY="#ffa8a8"; PRIMARY_RGB="255, 168, 168"; HOVER="#ff8787"; BACKGROUND="#fff5f5"; INFO="#ff6b6b"; THEME_COLOR="#ff6b6b"
+            BG_GRADIENT_START="#fa5252"; BG_GRADIENT_MID="#ffc9c9"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
+            C_BLUE="#74c0fc"; C_CYAN="#66d9e8"; C_DARK="#dee2e6"; C_GRAPE="#e599f7"; C_GRAY="#adb5bd"
+            C_GREEN="#8ce99a"; C_INDIGO="#91a7ff"; C_LIME="#c0eb75"; C_ORANGE="#ffc078"; C_PINK="#faa2c1"
+            C_RED="#ffa8a8"; C_TEAL="#63e6be"; C_VIOLET="#b197fc"; C_YELLOW="#ffe066"
+            WARP_L1='                            [1.0, 0.96, 0.96],'
+            WARP_L2='                            [0.98, 0.32, 0.32],'
+            WARP_L3='                            [1.0, 0.99, 0.99],'
+            WARP_L4='                            [0.92, 0.45, 0.45],'
+            ;;
+        9)
+            PRIMARY="#e599f7"; PRIMARY_RGB="229, 153, 247"; HOVER="#da77f2"; BACKGROUND="#f8f0fc"; INFO="#cc5de8"; THEME_COLOR="#cc5de8"
+            BG_GRADIENT_START="#be4bdb"; BG_GRADIENT_MID="#eebefa"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
+            C_BLUE="#74c0fc"; C_CYAN="#66d9e8"; C_DARK="#dee2e6"; C_GRAPE="#e599f7"; C_GRAY="#adb5bd"
+            C_GREEN="#8ce99a"; C_INDIGO="#91a7ff"; C_LIME="#c0eb75"; C_ORANGE="#ffc078"; C_PINK="#faa2c1"
+            C_RED="#ffa8a8"; C_TEAL="#63e6be"; C_VIOLET="#b197fc"; C_YELLOW="#ffe066"
+            WARP_L1='                            [0.98, 0.94, 1.0],'
+            WARP_L2='                            [0.75, 0.35, 0.92],'
+            WARP_L3='                            [1.0, 0.98, 1.0],'
+            WARP_L4='                            [0.85, 0.55, 0.95],'
+            ;;
+        10)
+            PRIMARY="#63e6be"; PRIMARY_RGB="99, 230, 190"; HOVER="#38d9a9"; BACKGROUND="#e6fcf5"; INFO="#20c997"; THEME_COLOR="#20c997"
+            BG_GRADIENT_START="#12b886"; BG_GRADIENT_MID="#96f2d7"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
+            C_BLUE="#74c0fc"; C_CYAN="#66d9e8"; C_DARK="#dee2e6"; C_GRAPE="#e599f7"; C_GRAY="#adb5bd"
+            C_GREEN="#8ce99a"; C_INDIGO="#91a7ff"; C_LIME="#c0eb75"; C_ORANGE="#ffc078"; C_PINK="#faa2c1"
+            C_RED="#ffa8a8"; C_TEAL="#63e6be"; C_VIOLET="#b197fc"; C_YELLOW="#ffe066"
+            WARP_L1='                            [0.94, 0.99, 0.97],'
+            WARP_L2='                            [0.07, 0.72, 0.53],'
+            WARP_L3='                            [0.98, 1.0, 0.99],'
+            WARP_L4='                            [0.22, 0.85, 0.68],'
+            ;;
+        11)
+            PRIMARY="#ffe066"; PRIMARY_RGB="255, 224, 102"; HOVER="#ffd43b"; BACKGROUND="#fff9db"; INFO="#fcc419"; THEME_COLOR="#fcc419"
+            BG_GRADIENT_START="#fab005"; BG_GRADIENT_MID="#ffec99"; BG_GRADIENT_END="#ffffff"; BG_GLOW="rgba(var(--primary-rgb), 0.26)"
+            C_BLUE="#74c0fc"; C_CYAN="#66d9e8"; C_DARK="#dee2e6"; C_GRAPE="#e599f7"; C_GRAY="#adb5bd"
+            C_GREEN="#8ce99a"; C_INDIGO="#91a7ff"; C_LIME="#c0eb75"; C_ORANGE="#ffc078"; C_PINK="#faa2c1"
+            C_RED="#ffa8a8"; C_TEAL="#63e6be"; C_VIOLET="#b197fc"; C_YELLOW="#ffe066"
+            WARP_L1='                            [1.0, 0.98, 0.92],'
+            WARP_L2='                            [0.98, 0.75, 0.08],'
+            WARP_L3='                            [1.0, 0.99, 0.96],'
+            WARP_L4='                            [0.92, 0.62, 0.12],'
             ;;
     esac
 fi
