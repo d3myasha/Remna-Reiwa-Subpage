@@ -88,6 +88,16 @@ bash setup.sh -t 2 -l ru        # Тема Monochrome + русский язык
 
 ---
 
+## 🔄 Обновление
+
+```bash
+cd /opt/remnawave/subscription/
+rm -rf setup.sh index.html
+curl -L -s -O https://raw.githubusercontent.com/d3myasha/Remna-Reiwa-Subpage/main/setup.sh && bash setup.sh
+```
+
+---
+
 ## 📦 Ручная установка
 
 <details>
