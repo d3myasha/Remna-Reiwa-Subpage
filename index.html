@@ -1767,7 +1767,7 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             return svg.replace('<svg', `<svg class="${className}"`);
         }
 
-        // Get icon color CSS
+        // Get icon color CSS — supports Mantine color names or any HEX
         function getIconColor(colorValue) {
             if (!colorValue) return 'var(--primary-color)';
             if (colorValue.startsWith('#')) return colorValue;
