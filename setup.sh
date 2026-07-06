@@ -226,41 +226,26 @@ elif [ -f compose.yml ]; then DC="compose.yml"
 else DC=""; fi
 
 if [ -n "$DC" ]; then
-    # Проверяем, есть ли уже нужный volume
     if ! grep -q 'index.html:/opt/app/frontend/index.html' "$DC" 2>/dev/null; then
-        # Ищем первый сервис (строка с отступом 2 или 4 пробела и двоеточием)
         FIRST_SERVICE=$(grep -n '^\s\{2,4\}[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | head -1)
         SERVICE_LINE=$(echo "$FIRST_SERVICE" | cut -d: -f1)
-        
+
         if [ -n "$SERVICE_LINE" ]; then
-            # Проверяем, есть ли уже блок volumes: у этого сервиса
-            # Ищем volumes: после строки сервиса и до следующего сервиса
             NEXT_SERVICE=$(grep -n '^\s\{2,4\}[a-zA-Z0-9_-]\+:' "$DC" 2>/dev/null | sed -n "2p" | cut -d: -f1)
-            if [ -z "$NEXT_SERVICE" ]; then
-                NEXT_SERVICE=$(wc -l < "$DC")
-            fi
-            
-            # Ищем volumes: между SERVICE_LINE и NEXT_SERVICE
+            [ -z "$NEXT_SERVICE" ] && NEXT_SERVICE=$(wc -l < "$DC")
+
             VOLUMES_LINE=$(sed -n "${SERVICE_LINE},${NEXT_SERVICE}p" "$DC" | grep -n '^\s\{4,6\}volumes:' | head -1 | cut -d: -f1)
-            
+
             if [ -n "$VOLUMES_LINE" ]; then
-                # volumes: уже есть — добавляем в конец блока
                 ACTUAL_VOLUMES_LINE=$((SERVICE_LINE + VOLUMES_LINE - 1))
-                # Находим последнюю строку volumes (следующая строка с тем же или меньшим отступом)
                 LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" 'NR > start && /^\s{4,6}[a-z_-]+:/ {print NR; exit}' "$DC")
-                if [ -z "$LAST_VOLUME_LINE" ]; then
-                    LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" 'NR > start && /^\s{0,5}[^ ]/ {print NR-1; exit}' "$DC")
-                fi
-                if [ -z "$LAST_VOLUME_LINE" ]; then
-                    LAST_VOLUME_LINE=$(wc -l < "$DC")
-                fi
-                
-                # Вставляем новый volume после последнего существующего
+                [ -z "$LAST_VOLUME_LINE" ] && LAST_VOLUME_LINE=$(awk -v start="$ACTUAL_VOLUMES_LINE" 'NR > start && /^\s{0,5}[^ ]/ {print NR-1; exit}' "$DC")
+                [ -z "$LAST_VOLUME_LINE" ] && LAST_VOLUME_LINE=$(wc -l < "$DC")
+
                 awk -v line="$LAST_VOLUME_LINE" 'NR==line {print; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp"
                 mv "${DC}.tmp" "$DC"
                 echo "  → Volume mount добавлен в существующий блок volumes"
             else
-                # volumes: нет — создаём новый блок после строки сервиса
                 awk -v line="$SERVICE_LINE" 'NR==line {print; print "    volumes:"; print "      - ./index.html:/opt/app/frontend/index.html"; next} 1' "$DC" > "${DC}.tmp"
                 mv "${DC}.tmp" "$DC"
                 echo "  → Создан новый блок volumes с mount point"
@@ -268,12 +253,28 @@ if [ -n "$DC" ]; then
         fi
     fi
 
-    echo "  → Перезапускаю контейнер..."
-    docker compose down --remove-orphans
-    docker compose up -d
-    echo "  ✓ Контейнер перезапущен"
+    # Спрашиваем, перезапускать ли
+    if [ "$L" = "ru" ]; then
+        echo "  Хочешь перезапустить контейнер сейчас?"
+        read -rp "  Добавить volume и перезапустить? [Y/n]: " restart_choice
+    else
+        echo "  Restart container now?"
+        read -rp "  Add volume and restart? [Y/n]: " restart_choice
+    fi
+    case "$restart_choice" in
+        n|N|no|No) echo "  → Добавь volume и перезапусти вручную: docker compose restart" ;;
+        *) echo "  → Перезапускаю контейнер..."
+           docker compose down --remove-orphans
+           docker compose up -d
+           echo "  ✓ Контейнер перезапущен" ;;
+    esac
 else
-    echo "  docker-compose.yml не найден. Добавь volume mount и перезапусти вручную:"
+    echo "  docker-compose.yml не найден."
+    if [ "$L" = "ru" ]; then
+        echo "  Добавь volume mount в docker-compose.yml и перезапусти:"
+    else
+        echo "  Add volume mount and restart manually:"
+    fi
     echo "    volumes:"
     echo "      - ./index.html:/opt/app/frontend/index.html"
     echo "  docker compose down && docker compose up -d"
