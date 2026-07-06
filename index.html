@@ -1767,13 +1767,6 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             return svg.replace('<svg', `<svg class="${className}"`);
         }
 
-        // Get icon color CSS — supports Mantine color names or any HEX
-        function getIconColor(colorValue) {
-            if (!colorValue) return 'var(--primary-color)';
-            if (colorValue.startsWith('#')) return colorValue;
-            return `var(--color-${colorValue}, var(--primary-color))`;
-        }
-
         // Hardcoded translations for common UI texts
         const hardcodedTranslations = {
             recommended: {
@@ -2301,9 +2294,8 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             // Dots for each block
             blocks.forEach((block, index) => {
                 const stepIndex = index + 1;
-                const iconColor = getIconColor(block.svgIconColor);
                 const icon = getSvgIcon(block.svgIconKey) || platformIcon;
-                html += `<div class="timeline-dot ${timelineCurrentStep === stepIndex ? 'active' : ''}" data-step="${stepIndex}" style="background: ${iconColor};" onclick="goToTimelineStep(${stepIndex})">${icon}</div>`;
+                html += `<div class="timeline-dot ${timelineCurrentStep === stepIndex ? 'active' : ''}" data-step="${stepIndex}" style="background: var(--primary-color);" onclick="goToTimelineStep(${stepIndex})">${icon}</div>`;
             });
             html += '</div>';
 
@@ -2331,16 +2323,15 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             // Steps for blocks
             blocks.forEach((block, index) => {
                 const stepIndex = index + 1;
-                const iconColor = getIconColor(block.svgIconColor);
                 const icon = getSvgIcon(block.svgIconKey) || platformIcon;
                 html += `<div class="timeline-step ${timelineCurrentStep === stepIndex ? 'active' : ''}" data-step="${stepIndex}">
                     <div class="timeline-step-content guide-card">
                         <div class="guide-card-header">
-                            <div class="guide-card-icon" style="background: ${iconColor}; color: var(--primary-text);">${icon}</div>
+                            <div class="guide-card-icon" style="background: var(--primary-color); color: var(--primary-text);">${icon}</div>
                             <div class="guide-card-title">${getLocalizedText(block.title)}</div>
                         </div>
                         <div class="guide-card-description">${getLocalizedText(block.description)}</div>
-                        <div class="guide-card-buttons">${renderBlockButtons(block, selectedApp, iconColor)}</div>
+                        <div class="guide-card-buttons">${renderBlockButtons(block, selectedApp)}</div>
                     </div>
                 </div>`;
             });
@@ -2348,13 +2339,11 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             html += '</div>';
 
             // Navigation buttons
-            const nextColor = timelineCurrentStep < totalSteps - 1 ? (timelineCurrentStep === 0 ? getIconColor(blocks[0]?.svgIconColor) : getIconColor(blocks[timelineCurrentStep]?.svgIconColor)) : 'var(--primary-color)';
-
             html += `<div class="timeline-nav">
                 <button class="btn" onclick="prevTimelineStep()" id="timelinePrevBtn" ${timelineCurrentStep === 0 ? 'disabled' : ''}>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                 </button>
-                <button class="btn btn-primary" onclick="nextTimelineStep()" id="timelineNextBtn" style="background: ${nextColor}; border-color: ${nextColor};" ${timelineCurrentStep === totalSteps - 1 ? 'disabled' : ''}>
+                <button class="btn btn-primary" onclick="nextTimelineStep()" id="timelineNextBtn" ${timelineCurrentStep === totalSteps - 1 ? 'disabled' : ''}>
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </button>
             </div>`;
@@ -2441,16 +2430,15 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         function renderGuidesCards(app) {
             let html = '<div class="guides-cards">';
             app.blocks.forEach((block) => {
-                const iconColor = getIconColor(block.svgIconColor);
                 const icon = getSvgIcon(block.svgIconKey);
                 html += `
                     <div class="guide-card">
                         <div class="guide-card-header">
-                            <div class="guide-card-icon" style="background: ${iconColor}; color: var(--primary-text);">${icon}</div>
+                            <div class="guide-card-icon" style="background: var(--primary-color); color: var(--primary-text);">${icon}</div>
                             <div class="guide-card-title">${getLocalizedText(block.title)}</div>
                         </div>
                         <div class="guide-card-description">${getLocalizedText(block.description)}</div>
-                        <div class="guide-card-buttons">${renderBlockButtons(block, app, iconColor)}</div>
+                        <div class="guide-card-buttons">${renderBlockButtons(block, app)}</div>
                     </div>
                 `;
             });
@@ -2461,12 +2449,11 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         function renderGuidesAccordion(app) {
             let html = '<div class="guides-accordion">';
             app.blocks.forEach((block, index) => {
-                const iconColor = getIconColor(block.svgIconColor);
                 const icon = getSvgIcon(block.svgIconKey);
                 html += `
                     <div class="accordion-item ${index === 0 ? 'open' : ''}">
                         <div class="accordion-header" onclick="toggleAccordion(this)">
-                            <div class="accordion-icon" style="background: ${iconColor}; color: var(--primary-text);">${icon}</div>
+                            <div class="accordion-icon" style="background: var(--primary-color); color: var(--primary-text);">${icon}</div>
                             <div class="accordion-title">${getLocalizedText(block.title)}</div>
                             <div class="accordion-arrow">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2476,7 +2463,7 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                         </div>
                         <div class="accordion-content">
                             <div class="accordion-description">${getLocalizedText(block.description)}</div>
-                            <div class="accordion-buttons">${renderBlockButtons(block, app, iconColor)}</div>
+                            <div class="accordion-buttons">${renderBlockButtons(block, app)}</div>
                         </div>
                     </div>
                 `;
@@ -2488,17 +2475,16 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         function renderGuidesExpanded(app) {
             let html = '<div class="guides-expanded">';
             app.blocks.forEach((block) => {
-                const iconColor = getIconColor(block.svgIconColor);
                 const icon = getSvgIcon(block.svgIconKey);
                 html += `
                     <div class="expanded-item">
                         <div class="expanded-header">
-                            <div class="expanded-icon" style="background: ${iconColor}; color: var(--primary-text);">${icon}</div>
+                            <div class="expanded-icon" style="background: var(--primary-color); color: var(--primary-text);">${icon}</div>
                             <div class="expanded-title">${getLocalizedText(block.title)}</div>
                         </div>
                         <div class="expanded-content">
                             <div class="expanded-description">${getLocalizedText(block.description)}</div>
-                            <div class="expanded-buttons">${renderBlockButtons(block, app, iconColor)}</div>
+                            <div class="expanded-buttons">${renderBlockButtons(block, app)}</div>
                         </div>
                     </div>
                 `;
@@ -2510,15 +2496,14 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         function renderGuidesMinimal(app) {
             let html = '<div class="guides-minimal">';
             app.blocks.forEach((block, index) => {
-                const iconColor = getIconColor(block.svgIconColor);
                 html += `
                     <div class="step">
                         <div class="step-title">
-                            <span class="step-number" style="background: ${iconColor};">${index + 1}</span>
+                            <span class="step-number" style="background: var(--primary-color);">${index + 1}</span>
                             ${getLocalizedText(block.title)}
                         </div>
                         <div class="step-description">${getLocalizedText(block.description)}</div>
-                        <div class="step-buttons">${renderBlockButtons(block, app, iconColor)}</div>
+                        <div class="step-buttons">${renderBlockButtons(block, app)}</div>
                     </div>
                 `;
             });
@@ -2539,25 +2524,23 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             // Timeline dots with icons and colors
             html += '<div class="timeline-dots">';
             blocks.forEach((block, index) => {
-                const iconColor = getIconColor(block.svgIconColor);
                 const icon = getSvgIcon(block.svgIconKey) || platformIcon;
-                html += `<div class="timeline-dot ${index === 0 ? 'active' : ''}" data-step="${index}" style="background: ${iconColor};" onclick="goToTimelineStep(${index})">${icon}</div>`;
+                html += `<div class="timeline-dot ${index === 0 ? 'active' : ''}" data-step="${index}" style="background: var(--primary-color);" onclick="goToTimelineStep(${index})">${icon}</div>`;
             });
             html += '</div>';
 
             html += '<div class="timeline-container">';
             blocks.forEach((block, index) => {
-                const iconColor = getIconColor(block.svgIconColor);
                 const icon = getSvgIcon(block.svgIconKey) || platformIcon;
                 html += `
-                    <div class="timeline-step ${index === 0 ? 'active' : ''}" data-step="${index}" data-color="${iconColor}">
+                    <div class="timeline-step ${index === 0 ? 'active' : ''}" data-step="${index}">
                         <div class="timeline-step-content guide-card">
                             <div class="guide-card-header">
-<div class="guide-card-icon" style="background: ${iconColor}; color: var(--primary-text);">${icon}</div>
+<div class="guide-card-icon" style="background: var(--primary-color); color: var(--primary-text);">${icon}</div>
                             <div class="guide-card-title">${getLocalizedText(block.title)}</div>
                         </div>
                         <div class="guide-card-description">${getLocalizedText(block.description)}</div>
-                        <div class="guide-card-buttons" data-btn-color="${iconColor}">${renderBlockButtons(block, app, iconColor)}</div>
+                        <div class="guide-card-buttons">${renderBlockButtons(block, app)}</div>
                         </div>
                     </div>
                 `;
@@ -2567,16 +2550,14 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             // Nav buttons with step icons
             const prevIcon = blocks.length > 1 ? (getSvgIcon(blocks[0].svgIconKey) || platformIcon) : '';
             const nextIcon = blocks.length > 1 ? (getSvgIcon(blocks[1].svgIconKey) || platformIcon) : '';
-            const prevColor = blocks.length > 0 ? getIconColor(blocks[0].svgIconColor) : 'var(--primary-color)';
-            const nextColor = blocks.length > 1 ? getIconColor(blocks[1].svgIconColor) : 'var(--primary-color)';
 
             html += `
                 <div class="timeline-nav">
-                    <button class="btn btn-icon" onclick="prevTimelineStep()" id="timelinePrevBtn" disabled style="--btn-color: ${prevColor};">
+                    <button class="btn btn-icon" onclick="prevTimelineStep()" id="timelinePrevBtn" disabled>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                         <span class="nav-step-icon">${prevIcon}</span>
                     </button>
-                    <button class="btn btn-primary btn-icon" onclick="nextTimelineStep()" id="timelineNextBtn" style="background: ${nextColor}; border-color: ${nextColor};">
+                    <button class="btn btn-primary btn-icon" onclick="nextTimelineStep()" id="timelineNextBtn">
                         <span class="nav-step-icon">${nextIcon}</span>
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </button>
@@ -2586,11 +2567,10 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             return html;
         }
 
-        function renderBlockButtons(block, app, btnColor = null) {
+        function renderBlockButtons(block, app) {
             if (!block.buttons?.length) return '';
             const { response } = panelData || {};
             let html = '';
-            const colorStyle = btnColor ? `style="background: ${btnColor}; border-color: ${btnColor};"` : '';
 
             block.buttons.forEach(button => {
                 const buttonText = getLocalizedText(button.text);
@@ -2619,13 +2599,13 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                 if (buttonType === 'subscriptionLink' || buttonType === 'subscription') {
                     const subscriptionUrl = generateSubscriptionUrl(app, response?.subscriptionUrl, button.link);
                     if (subscriptionUrl) {
-                        html += `<button class="btn btn-primary" ${colorStyle} onclick="openSubscriptionUrl('${escapeForAttribute(subscriptionUrl)}')">${buttonIcon} ${buttonText}</button>`;
+                        html += `<button class="btn btn-primary" onclick="openSubscriptionUrl('${escapeForAttribute(subscriptionUrl)}')">${buttonIcon} ${buttonText}</button>`;
                     }
                 } else if (buttonType === 'copyButton' || buttonType === 'copy') {
-                    html += `<button class="btn btn-primary" ${colorStyle} onclick="copyToClipboard('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
+                    html += `<button class="btn btn-primary" onclick="copyToClipboard('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
                 } else {
                     // external and any other type - open link
-                    html += `<button class="btn btn-primary" ${colorStyle} onclick="openLink('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
+                    html += `<button class="btn btn-primary" onclick="openLink('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
                 }
             });
 
@@ -2703,16 +2683,10 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                 if (!isLast && blocks[blockIndex]) {
                     const nextBlock = blocks[blockIndex];
                     const nextIcon = getSvgIcon(nextBlock.svgIconKey) || platformIcon;
-                    const nextColor = getIconColor(nextBlock.svgIconColor);
-                    nextBtn.style.background = nextColor;
-                    nextBtn.style.borderColor = nextColor;
                     const nextIconSpan = nextBtn.querySelector('.nav-step-icon');
                     if (nextIconSpan) nextIconSpan.innerHTML = nextIcon;
                 } else if (!isLast && hasAppSelection && step === 0) {
-                    // First step to block step
-                    const nextColor = blocks[0] ? getIconColor(blocks[0].svgIconColor) : 'var(--primary-color)';
-                    nextBtn.style.background = nextColor;
-                    nextBtn.style.borderColor = nextColor;
+                    // First step to block step - no color update needed
                 }
             }
         }
