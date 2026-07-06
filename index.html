@@ -26,16 +26,41 @@
     // Ported from @paper-design/shaders — Apache 2.0
     // ─────────────────────────────────────────────────────────────────
     function generateNoiseTexture(gl) {
-        const size = 256;
+        const size = 512;
         const data = new Uint8Array(size * size * 4);
-        for (let i = 0; i < data.length; i++) data[i] = Math.random() * 256;
+        // Value noise: each 2x2 block сглажен
+        const blockSize = 4;
+        const blocks = size / blockSize;
+        const blockData = new Float32Array(blocks * blocks);
+        for (let i = 0; i < blockData.length; i++) blockData[i] = Math.random();
+        for (let y = 0; y < size; y++) {
+            for (let x = 0; x < size; x++) {
+                const bx = Math.floor(x / blockSize);
+                const by = Math.floor(y / blockSize);
+                const fx = (x % blockSize) / blockSize;
+                const fy = (y % blockSize) / blockSize;
+                const ix = bx + 1 < blocks ? bx + 1 : bx;
+                const iy = by + 1 < blocks ? by + 1 : by;
+                const v = blockData[by * blocks + bx] * (1-fx) * (1-fy)
+                        + blockData[by * blocks + ix] * fx * (1-fy)
+                        + blockData[iy * blocks + bx] * (1-fx) * fy
+                        + blockData[iy * blocks + ix] * fx * fy;
+                const idx = (y * size + x) * 4;
+                const c = v * 256;
+                data[idx] = c;
+                data[idx+1] = c;
+                data[idx+2] = c;
+                data[idx+3] = 255;
+            }
+        }
         const tex = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, tex);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, size, size, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.generateMipmap(gl.TEXTURE_2D);
         return tex;
     }
 
@@ -140,7 +165,7 @@
             }
 
             vec3 color = gradient.rgb;
-            color += 1. / 256. * (fract(sin(dot(.014 * gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - .5);
+            color += 1. / 512. * (fract(sin(dot(.014 * gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453123) - .5);
             fragColor = vec4(color, gradient.a);
         }
     `;
