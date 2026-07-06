@@ -23,7 +23,7 @@
 - **WebGL2 Warp-шейдер** — динамический анимированный фон
 - **11 встроенных тем** — Purple … Blush + [Open Color](https://github.com/yeun/open-color) (Red, Grape, Teal, Yellow)
 - **Адаптивный дизайн** — работает на мобильных и десктопе
-- **Тёмная и светлая вариация** — для каждой из 7 палитр (выбор при установке)
+- **Тёмная и светлая вариация** — для каждой палитры (выбор при установке)
 
 </td>
 <td width="50%">
@@ -42,30 +42,7 @@
 
 ## 🎨 Темы
 
-<div align="center">
-
-### Purple (По умолчанию)
-<img src="assets/Purple.png" alt="Purple Theme" width="700">
-
-### Monochrome
-<img src="assets/Monochrome.png" alt="Monochrome Theme" width="700">
-
-### Cyberpunk
-<img src="assets/Cyberpunk.png" alt="Cyberpunk Theme" width="700">
-
-### Emerald
-<img src="assets/Emerald.png" alt="Emerald Theme" width="700">
-
-### Amber
-<img src="assets/Amber.png" alt="Amber Theme" width="700">
-
-### Ocean
-<img src="assets/Ocean.png" alt="Ocean Theme" width="700">
-
-### Blush (светло-розовая)
-<img src="assets/Blush.png" alt="Blush Theme" width="700">
-
-</div>
+Скриншоты всех 11 тем (тёмный/светлый режим) — в **[THEMES.md](THEMES.md)**.
 
 ---
 
@@ -88,7 +65,7 @@ bash setup.sh -t 1 -m light     # Purple, светлая вариация
 bash setup.sh -t 2 -l ru        # Тема Monochrome + русский язык
 ```
 
-**Темы:** `1`–`7` (Purple … Blush). **Режим:** `-m dark` (по умолчанию) или `-m light` — белая вариация той же палитры.
+**Темы:** `1`–`7` Purple … Blush · `8` Open Red · `9` Open Grape · `10` Open Teal · `11` Open Yellow ([open-color](https://github.com/yeun/open-color)). **Режим:** `-m dark` или `-m light`.
 
 ---
 
