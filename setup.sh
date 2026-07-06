@@ -235,12 +235,15 @@ if [ -n "$DC" ]; then
         SERVICE_INDENT=$((SERVICE_INDENT - 1))
         [ "$SERVICE_INDENT" -lt 0 ] && SERVICE_INDENT=0
 
-        # Находим отступ свойств внутри сервиса (первая строка вида "    image:" после сервиса)
+        # Находим отступ свойств внутри сервиса (первая строка вида "        image:" после сервиса)
         PROP_INDENT=0
         if [ -n "$SERVICE_LINE" ]; then
-            PROP_LINE=$(sed -n "${SERVICE_LINE},\$p" "$DC" | grep -n '^\s\{'"$((SERVICE_INDENT+2))"',\}[a-z_-]\+:' | head -1)
-            PROP_INDENT=$(echo "$PROP_LINE" | grep -oP '^[[:space:]]*(?=[a-z_-]+:)' | wc -c)
-            PROP_INDENT=$((PROP_INDENT - 1))
+            # Берём первую строку со свойством (image:, container_name:, etc) и извлекаем её отступ
+            PROP_LINE=$(sed -n "$((SERVICE_LINE+1)),\$p" "$DC" | grep -m1 '^[[:space:]]\{'"$((SERVICE_INDENT+2))"',\}[a-z_-]\+:')
+            if [ -n "$PROP_LINE" ]; then
+                PROP_INDENT=$(echo "$PROP_LINE" | sed 's/^\([[:space:]]*\).*/\1/' | wc -c)
+                PROP_INDENT=$((PROP_INDENT - 1))
+            fi
         fi
         [ "$PROP_INDENT" -lt 2 ] && PROP_INDENT=$((SERVICE_INDENT + 4))
 
