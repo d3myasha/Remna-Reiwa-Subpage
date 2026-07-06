@@ -65,7 +65,7 @@ bash setup.sh -t 1 -m light     # Purple, светлая вариация
 bash setup.sh -t 2 -l ru        # Тема Monochrome + русский язык
 ```
 
-**Темы:** `1`–`7` Purple … Blush · `8` Open Red · `9` Open Grape · `10` Open Teal · `11` Open Yellow ([open-color](https://github.com/yeun/open-color)). **Режим:** `-m dark` или `-m light`.
+**Темы:** `1`–`11` (см. [THEMES.md](THEMES.md)). **Режим:** `-m dark` или `-m light`.
 
 ---
 

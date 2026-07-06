@@ -1,6 +1,6 @@
 # 🎨 Темы оформления
 
-Все темы поддерживают **тёмный** и **светлый** режим (`bash setup.sh` → выбор режима или `-m dark` / `-m light`).
+Установка: `bash setup.sh -t N` (тёмная) или `bash setup.sh -t N -m light` (светлая).
 
 | Тема | `-t` |
 |------|------|
@@ -11,83 +11,79 @@
 | Amber | 5 |
 | Ocean | 6 |
 | Blush | 7 |
-| Open Red | 8 |
-| Open Grape | 9 |
-| Open Teal | 10 |
-| Open Yellow | 11 |
+| Red | 8 |
+| Grape | 9 |
+| Teal | 10 |
+| Yellow | 11 |
 
-Темы **8–11** используют палитру [Open Color](https://github.com/yeun/open-color).
+Темы **8–11** на палитре [Open Color](https://github.com/yeun/open-color).
+
+Скрины в `assets/`: `{имя}-dark.png` и `{имя}-light.png`.
 
 ---
 
-## Классические темы (1–7)
+### 1. Purple
 
-### 1. Purple (по умолчанию)
-
-<img src="assets/Purple.png" alt="Purple Theme" width="700">
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Purple-dark.png" width="400"> | <img src="assets/Purple-light.png" width="400"> |
 
 ### 2. Monochrome
 
-<img src="assets/Monochrome.png" alt="Monochrome Theme" width="700">
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Monochrome-dark.png" width="400"> | <img src="assets/Monochrome-light.png" width="400"> |
 
 ### 3. Cyberpunk
 
-<img src="assets/Cyberpunk.png" alt="Cyberpunk Theme" width="700">
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Cyberpunk-dark.png" width="400"> | <img src="assets/Cyberpunk-light.png" width="400"> |
 
 ### 4. Emerald
 
-<img src="assets/Emerald.png" alt="Emerald Theme" width="700">
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Emerald-dark.png" width="400"> | <img src="assets/Emerald-light.png" width="400"> |
 
 ### 5. Amber
 
-<img src="assets/Amber.png" alt="Amber Theme" width="700">
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Amber-dark.png" width="400"> | <img src="assets/Amber-light.png" width="400"> |
 
 ### 6. Ocean
 
-<img src="assets/Ocean.png" alt="Ocean Theme" width="700">
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Ocean-dark.png" width="400"> | <img src="assets/Ocean-light.png" width="400"> |
 
-### 7. Blush (светло-розовая)
+### 7. Blush
 
-<img src="assets/Blush.png" alt="Blush Theme" width="700">
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Blush-dark.png" width="400"> | <img src="assets/Blush-light.png" width="400"> |
 
----
+### 8. Red
 
-## Open Color (8–11)
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Red-dark.png" width="400"> | <img src="assets/Red-light.png" width="400"> |
 
-Скриншоты можно добавить в `assets/` как `Open-Red.png`, `Open-Grape.png`, `Open-Teal.png`, `Open-Yellow.png`.
+### 9. Grape
 
-### 8. Open Red
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Grape-dark.png" width="400"> | <img src="assets/Grape-light.png" width="400"> |
 
-*Скриншот: `assets/Open-Red.png` (пока не добавлен)*
+### 10. Teal
 
-```bash
-bash setup.sh -t 8        # тёмная
-bash setup.sh -t 8 -m light
-```
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Teal-dark.png" width="400"> | <img src="assets/Teal-light.png" width="400"> |
 
-### 9. Open Grape
+### 11. Yellow
 
-*Скриншот: `assets/Open-Grape.png` (пока не добавлен)*
-
-```bash
-bash setup.sh -t 9
-bash setup.sh -t 9 -m light
-```
-
-### 10. Open Teal
-
-*Скриншот: `assets/Open-Teal.png` (пока не добавлен)*
-
-```bash
-bash setup.sh -t 10
-bash setup.sh -t 10 -m light
-```
-
-### 11. Open Yellow
-
-*Скриншот: `assets/Open-Yellow.png` (пока не добавлен)*
-
-```bash
-bash setup.sh -t 11
-bash setup.sh -t 11 -m light
-```
+| Тёмная | Светлая |
+|:------:|:-------:|
+| <img src="assets/Yellow-dark.png" width="400"> | <img src="assets/Yellow-light.png" width="400"> |
