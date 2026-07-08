@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <script>
-    document.documentElement.classList.add('light-theme');
+    (function() {
+        var pref = localStorage.getItem('colorMode');
+        var dark = pref === 'dark' || (pref !== 'light' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.classList.add(dark ? 'color-mode-dark' : 'color-mode-light');
+    })();
     </script>
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180x180.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png" />
     <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#7c3aed" id="themeColor">
+    <meta name="theme-color" content="#c4b5fd" id="themeColor" data-theme-light="#c4b5fd" data-theme-dark="#c084fc">
+    <script type="application/json" id="warpColorsLight">[[0.94, 0.90, 0.99],[0.62, 0.42, 0.92],[0.97, 0.95, 1.0],[0.52, 0.32, 0.82]]</script>
+    <script type="application/json" id="warpColorsDark">[[0.07, 0.07, 0.07],[0.58, 0.44, 1.0],[0.07, 0.07, 0.07],[0.53, 0.22, 1.0]]</script>
     <meta name="description" content="<%= metaDescription %>" id="metaDesc">
     <title id="pageTitle"><%= metaTitle %></title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -374,7 +380,18 @@
     --color-yellow: #ca8a04;
 }
 
-.dark-theme {
+/* @color-mode-dark */
+.color-mode-dark {
+    --primary-color: #c084fc;
+    --primary-hover: #a78bfa;
+    --primary-text: #0a0a0a;
+    --background: #0a0812;
+    --info: #c084fc;
+    --primary-rgb: 192, 132, 252;
+    --bg-gradient-start: #1e1b4b;
+    --bg-gradient-mid: #0f0a1a;
+    --bg-gradient-end: #020617;
+    --bg-glow: rgba(var(--primary-rgb), 0.06);
     --surface: rgba(255, 255, 255, 0.02);
     --border: rgba(255, 255, 255, 0.05);
     --text-primary: #e2e8f0;
@@ -384,9 +401,35 @@
     --panel-bg: rgba(24, 24, 27, 0.70);
     --elevated-bg: rgba(39, 39, 42, 0.50);
     --elevated-bg-hover: rgba(39, 39, 42, 0.80);
+    --color-blue: #93c5fd;
+    --color-cyan: #67e8f9;
+    --color-dark: #1e293b;
+    --color-grape: #c084fc;
+    --color-gray: #6b7280;
+    --color-green: #6ee7b7;
+    --color-indigo: #a5b4fc;
+    --color-lime: #bef264;
+    --color-orange: #fdba74;
+    --color-pink: #f9a8d4;
+    --color-red: #fca5a5;
+    --color-teal: #5eead4;
+    --color-violet: #c084fc;
+    --color-yellow: #fde68a;
 }
+/* @color-mode-dark-end */
 
-.light-theme {
+/* @color-mode-light */
+.color-mode-light {
+    --primary-color: #c4b5fd;
+    --primary-hover: #a78bfa;
+    --primary-text: #1e293b;
+    --background: #ede9fe;
+    --info: #a78bfa;
+    --primary-rgb: 196, 181, 253;
+    --bg-gradient-start: #8b5cf6;
+    --bg-gradient-mid: #ddd6fe;
+    --bg-gradient-end: #ffffff;
+    --bg-glow: rgba(var(--primary-rgb), 0.28);
     --surface: rgba(255, 255, 255, 0.88);
     --border: rgba(15, 23, 42, 0.14);
     --border-strong: rgba(15, 23, 42, 0.20);
@@ -402,51 +445,65 @@
     --elevated-bg-hover: #ffffff;
     --shadow: 0 4px 24px rgba(15, 23, 42, 0.10);
     --shadow-lg: 0 12px 40px rgba(15, 23, 42, 0.14);
-    --primary-text: #1e293b;
+    --color-blue: #93c5fd;
+    --color-cyan: #a5f3fc;
+    --color-dark: #e2e8f0;
+    --color-grape: #d8b4fe;
+    --color-gray: #94a3b8;
+    --color-green: #86efac;
+    --color-indigo: #c7d2fe;
+    --color-lime: #d9f99d;
+    --color-orange: #fdba74;
+    --color-pink: #f9a8d4;
+    --color-red: #fca5a5;
+    --color-teal: #99f6e4;
+    --color-violet: #c4b5fd;
+    --color-yellow: #fde68a;
 }
+/* @color-mode-light-end */
 
-.light-theme body::before {
+.color-mode-light body::before {
     background:
         radial-gradient(ellipse 55% 45% at 12% 8%, var(--bg-glow), transparent 62%),
         radial-gradient(ellipse 50% 40% at 88% 92%, rgba(var(--primary-rgb), 0.14), transparent 58%);
     opacity: 1;
 }
 
-.light-theme .platform-tabs {
+.color-mode-light .platform-tabs {
     background: var(--panel-bg);
     border: 1px solid rgba(var(--primary-rgb), 0.28);
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
-.light-theme .platform-tab.active {
+.color-mode-light .platform-tab.active {
     background: rgba(var(--primary-rgb), 0.32);
     color: #334155;
     font-weight: 600;
     box-shadow: inset 0 0 0 1px rgba(var(--primary-rgb), 0.2);
 }
-.light-theme .app-tab {
+.color-mode-light .app-tab {
     background: var(--panel-bg);
     border-color: rgba(var(--primary-rgb), 0.26);
     box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
 }
-.light-theme .app-tab.active {
+.color-mode-light .app-tab.active {
     background: rgba(var(--primary-rgb), 0.26);
     border-color: rgba(var(--primary-rgb), 0.48);
     color: #334155;
     font-weight: 600;
 }
-.light-theme .app-card {
+.color-mode-light .app-card {
     background: var(--panel-bg);
     border-color: rgba(var(--primary-rgb), 0.22);
     box-shadow: 0 2px 10px rgba(15, 23, 42, 0.07);
 }
-.light-theme .app-card.featured {
+.color-mode-light .app-card.featured {
     border-color: rgba(var(--primary-rgb), 0.4);
     background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.14) 0%, rgba(255, 255, 255, 0.98) 100%);
 }
-.light-theme .card.warp-effect-card {
+.color-mode-light .card.warp-effect-card {
     background: rgba(255, 255, 255, 0.72);
 }
-.light-theme .card.warp-effect-card .warp-effect-canvas {
+.color-mode-light .card.warp-effect-card .warp-effect-canvas {
     opacity: 0.92;
     mix-blend-mode: multiply;
 }
@@ -1549,6 +1606,10 @@ body::before {
                     </div>
                 </div>
                 <div class="settings-section">
+                    <label class="settings-label" id="appearanceLabel">Appearance</label>
+                    <div class="settings-buttons" id="colorModeButtons"></div>
+                </div>
+                <div class="settings-section">
                     <label class="settings-label" id="languageLabel">Language</label>
                     <div class="settings-buttons" id="languageButtons"></div>
                 </div>
@@ -1750,11 +1811,116 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             loadPanelData();
         }
 
+        let colorModePreference = 'system';
+        let colorSchemeMediaQuery = null;
+
         function loadSettings() {
             const savedLang = localStorage.getItem('lang') || getBrowserLanguage();
             currentLanguage = savedLang;
-            // Initialize snow mode
+            initColorMode();
             initSnowMode();
+        }
+
+        function getResolvedColorMode() {
+            if (colorModePreference === 'light') return 'light';
+            if (colorModePreference === 'dark') return 'dark';
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        function applyColorMode() {
+            const resolved = getResolvedColorMode();
+            const root = document.documentElement;
+            root.classList.remove('color-mode-light', 'color-mode-dark');
+            root.classList.add(resolved === 'dark' ? 'color-mode-dark' : 'color-mode-light');
+            const meta = document.getElementById('themeColor');
+            if (meta) {
+                const darkMeta = meta.getAttribute('data-theme-dark');
+                const lightMeta = meta.getAttribute('data-theme-light');
+                if (darkMeta && lightMeta) {
+                    meta.setAttribute('content', resolved === 'dark' ? darkMeta : lightMeta);
+                }
+            }
+            refreshWarpEffectIfNeeded();
+        }
+
+        function initColorMode() {
+            const saved = localStorage.getItem('colorMode');
+            colorModePreference = (saved === 'light' || saved === 'dark') ? saved : 'system';
+            if (!colorSchemeMediaQuery) {
+                colorSchemeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const onSchemeChange = () => {
+                    if (colorModePreference === 'system') applyColorMode();
+                };
+                if (colorSchemeMediaQuery.addEventListener) {
+                    colorSchemeMediaQuery.addEventListener('change', onSchemeChange);
+                } else if (colorSchemeMediaQuery.addListener) {
+                    colorSchemeMediaQuery.addListener(onSchemeChange);
+                }
+            }
+            applyColorMode();
+            setupColorModeButtons();
+        }
+
+        function setColorMode(mode) {
+            colorModePreference = mode;
+            if (mode === 'system') {
+                localStorage.removeItem('colorMode');
+            } else {
+                localStorage.setItem('colorMode', mode);
+            }
+            applyColorMode();
+            setupColorModeButtons();
+        }
+
+        function setupColorModeButtons() {
+            const container = document.getElementById('colorModeButtons');
+            if (!container) return;
+            const modes = [
+                { id: 'system', labelKey: 'colorModeSystem' },
+                { id: 'light', labelKey: 'colorModeLight' },
+                { id: 'dark', labelKey: 'colorModeDark' },
+            ];
+            container.innerHTML = modes.map(m => {
+                const active = colorModePreference === m.id ? ' btn-primary' : '';
+                return `<button type="button" class="btn${active}" data-color-mode="${m.id}">${getHardcodedText(m.labelKey)}</button>`;
+            }).join('');
+            container.querySelectorAll('[data-color-mode]').forEach(btn => {
+                btn.addEventListener('click', () => setColorMode(btn.getAttribute('data-color-mode')));
+            });
+        }
+
+        function getWarpColors() {
+            const resolved = getResolvedColorMode();
+            const el = document.getElementById(resolved === 'dark' ? 'warpColorsDark' : 'warpColorsLight');
+            if (!el || !el.textContent.trim()) return null;
+            try {
+                return JSON.parse(el.textContent.trim());
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function refreshWarpEffectIfNeeded() {
+            const warpCard = document.getElementById('subscription-info-card');
+            if (!warpCard || typeof window.initWarpEffect !== 'function') return;
+            if (warpCard._warpCleanup) {
+                warpCard._warpCleanup();
+                warpCard._warpInitialized = false;
+            }
+            const colors = getWarpColors();
+            if (!colors) return;
+            window.initWarpEffect(warpCard, {
+                speed: 0.8,
+                proportion: 0.55,
+                distortion: 0.12,
+                swirlIterations: 13,
+                shape: 1,
+                softness: 0.8,
+                swirl: 1.0,
+                shapeScale: 0.05,
+                colors,
+            });
+            warpCard._warpInitialized = true;
         }
 
         function getBrowserLanguage() {
@@ -1904,6 +2070,20 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                 vi: 'Chế độ Năm mới', es: 'Modo Año Nuevo', ja: '新年モード', be: 'Навагодні рэжым', pt: 'Modo Ano Novo',
                 uk: 'Новорічний режим', pl: 'Tryb Noworoczny', id: 'Mode Tahun Baru', tk: 'Täze ýyl rejimi', th: 'โหมดปีใหม่'
             },
+            appearance: {
+                en: 'Appearance', ru: 'Оформление', zh: '外观', fa: 'ظاهر', fr: 'Apparence',
+                uz: 'Ko\'rinish', de: 'Darstellung', tr: 'Görünüm', es: 'Apariencia', ja: '外観', pt: 'Aparência',
+                uk: 'Оформлення', pl: 'Wygląd'
+            },
+            colorModeSystem: {
+                en: 'System', ru: 'Как на устройстве', zh: '跟随系统', de: 'System', tr: 'Sistem', es: 'Sistema', ja: 'システム', pt: 'Sistema', uk: 'Як на пристрої', pl: 'System'
+            },
+            colorModeLight: {
+                en: 'Light', ru: 'Светлая', zh: '浅色', de: 'Hell', tr: 'Açık', es: 'Claro', ja: 'ライト', pt: 'Claro', uk: 'Світла', pl: 'Jasny'
+            },
+            colorModeDark: {
+                en: 'Dark', ru: 'Тёмная', zh: '深色', de: 'Dunkel', tr: 'Koyu', es: 'Oscuro', ja: 'ダーク', pt: 'Escuro', uk: 'Темна', pl: 'Ciemny'
+            },
         };
 
         // Language emojis for selector
@@ -2012,7 +2192,10 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             // Update settings modal labels
             document.getElementById('settingsTitle').textContent = getHardcodedText('settings');
             document.getElementById('languageLabel').textContent = getHardcodedText('language');
+            const appearanceLabel = document.getElementById('appearanceLabel');
+            if (appearanceLabel) appearanceLabel.textContent = getHardcodedText('appearance');
             document.getElementById('snowToggleLabel').textContent = getHardcodedText('newYearMode');
+            setupColorModeButtons();
         }
 
         function isNewYearSeason() {
@@ -2101,6 +2284,12 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                     for (const entry of entries) {
                         if (entry.isIntersecting) {
                             if (!warpCard._warpInitialized) {
+                                const warpColors = getWarpColors() || [
+                                    [0.95, 0.93, 1.0],
+                                    [0.55, 0.35, 0.95],
+                                    [0.98, 0.96, 1.0],
+                                    [0.75, 0.55, 1.0],
+                                ];
                                 window.initWarpEffect(warpCard, {
                                     speed: 0.8,
                                     proportion: 0.55,
@@ -2110,12 +2299,7 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                                     softness: 0.8,
                                     swirl: 1.0,
                                     shapeScale: 0.05,
-                    colors: [
-                            [0.95, 0.93, 1.0],
-                            [0.55, 0.35, 0.95],
-                            [0.98, 0.96, 1.0],
-                            [0.75, 0.55, 1.0],
-                    ],
+                                    colors: warpColors,
                                 });
                             }
                         } else {
