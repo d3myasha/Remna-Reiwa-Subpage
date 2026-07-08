@@ -2795,21 +2795,33 @@ body::before {
             return html;
         }
 
+        function isHappApp(app) {
+            if (!app) return false;
+            const name = (app.name || '').trim().toLowerCase();
+            const icon = (app.svgIconKey || '').trim().toLowerCase();
+            return name === 'happ' || icon === 'happ';
+        }
+
+        function applySubscriptionLinkTemplate(template, subscriptionUrl) {
+            let result = template
+                .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, subscriptionUrl)
+                .replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, subscriptionUrl)
+                .replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, subscriptionUrl);
+
+            const username = panelData?.response?.user?.username;
+            if (username) {
+                result = result.replace(/\{\{USERNAME\}\}/g, username);
+            }
+            return result;
+        }
+
         function generateSubscriptionUrl(app, subscriptionUrl, linkTemplate) {
             if (!subscriptionUrl) return null;
-            if (linkTemplate) {
-                let result = linkTemplate
-                    .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, subscriptionUrl)
-                    .replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, subscriptionUrl)
-                    .replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, subscriptionUrl);
-
-                const username = panelData?.response?.user?.username;
-                if (username) {
-                    result = result.replace(/\{\{USERNAME\}\}/g, username);
-                }
-                return result;
-            }
-            return null;
+            const template = (linkTemplate && String(linkTemplate).trim())
+                ? linkTemplate
+                : (isHappApp(app) ? 'happ://add/{{SUBSCRIPTION_LINK}}' : null);
+            if (!template) return null;
+            return applySubscriptionLinkTemplate(template, subscriptionUrl);
         }
 
         function goToTimelineStep(step) {
