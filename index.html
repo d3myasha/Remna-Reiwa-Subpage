@@ -25,7 +25,7 @@
     polyfillCountryFlagEmojis();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsencrypt@3.3.2/bin/jsencrypt.min.js"></script>
+
     <script type="module">
     // ─── Paper-Design Warp Shader ────────────────────────────────────
     // Ported from @paper-design/shaders — Apache 2.0
@@ -1726,82 +1726,6 @@ body::before {
             tk: 'Türkmen'
         };
 
-        // HAPP Encrypted Link Support - RSA Public Keys
-        const HAPP_PUBLIC_KEY_V3 = `-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAlBetA0wjbaj+h7oJ/d/h
-pNrXvAcuhOdFGEFcfCxSWyLzWk4SAQ05gtaEGZyetTax2uqagi9HT6lapUSUe2S8
-nMLJf5K+LEs9TYrhhBdx/B0BGahA+lPJa7nUwp7WfUmSF4hir+xka5ApHjzkAQn6
-cdG6FKtSPgq1rYRPd1jRf2maEHwiP/e/jqdXLPP0SFBjWTMt/joUDgE7v/IGGB0L
-Q7mGPAlgmxwUHVqP4bJnZ//5sNLxWMjtYHOYjaV+lixNSfhFM3MdBndjpkmgSfmg
-D5uYQYDL29TDk6Eu+xetUEqry8ySPjUbNWdDXCglQWMxDGjaqYXMWgxBA1UKjUBW
-wbgr5yKTJ7mTqhlYEC9D5V/LOnKd6pTSvaMxkHXwk8hBWvUNWAxzAf5JZ7EVE3jt
-0j682+/hnmL/hymUE44yMG1gCcWvSpB3BTlKoMnl4yrTakmdkbASeFRkN3iMRewa
-IenvMhzJh1fq7xwX94otdd5eLB2vRFavrnhOcN2JJAkKTnx9dwQwFpGEkg+8U613
-+Tfm/f82l56fFeoFN98dD2mUFLFZoeJ5CG81ZeXrH83niI0joX7rtoAZIPWzq3Y1
-Zb/Zq+kK2hSIhphY172Uvs8X2Qp2ac9UoTPM71tURsA9IvPNvUwSIo/aKlX5KE3I
-VE0tje7twWXL5Gb1sfcXRzsCAwEAAQ==
------END PUBLIC KEY-----`;
-
-        const HAPP_PUBLIC_KEY_V4 = `-----BEGIN PUBLIC KEY-----
-MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA3UZ0M3L4K+WjM3vkbQnz
-ozHg/cRbEXvQ6i4A8RVN4OM3rK9kU01FdjyoIgywve8OEKsFnVwERZAQZ1Trv60B
-hmaM76QQEE+EUlIOL9EpwKWGtTL5lYC1sT9XJMNP3/CI0gP5wwQI88cY/xedpOEB
-W72EmOOShHUm/b/3m+HPmqwc4ugKj5zWV5SyiT829aFA5DxSjmIIFBAms7DafmSq
-LFTYIQL5cShDY2u+/sqyAw9yZIOoqW2TFIgIHhLPWek/ocDU7zyOrlu1E0SmcQQb
-LFqHq02fsnH6IcqTv3N5Adb/CkZDDQ6HvQVBmqbKZKf7ZdXkqsc/Zw27xhG7OfXC
-tUmWsiL7zA+KoTd3avyOh93Q9ju4UQsHthL3Gs4vECYOCS9dsXXSHEY/1ngU/hjO
-WFF8QEE/rYV6nA4PTyUvo5RsctSQL/9DJX7XNh3zngvif8LsCN2MPvx6X+zLouBX
-zgBkQ9DFfZAGLWf9TR7KVjZC/3NsuUCDoAOcpmN8pENBbeB0puiKMMWSvll36+2M
-YR1Xs0MgT8Y9TwhE2+TnnTJOhzmHi/BxiUlY/w2E0s4ax9GHAmX0wyF4zeV7kDkc
-vHuEdc0d7vDmdw0oqCqWj0Xwq86HfORu6tm1A8uRATjb4SzjTKclKuoElVAVa5Jo
-oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
------END PUBLIC KEY-----`;
-
-        const HAPP_CRYPTO_V3 = {
-            publicKey: HAPP_PUBLIC_KEY_V3,
-            deepLink: 'happ://crypt3/'
-        };
-
-        const HAPP_CRYPTO_V4 = {
-            publicKey: HAPP_PUBLIC_KEY_V4,
-            deepLink: 'happ://crypt4/'
-        };
-
-        // Function to encrypt link using RSA public key
-        function encryptLink(link, publicKey) {
-            try {
-                const encrypt = new JSEncrypt();
-                encrypt.setPublicKey(publicKey);
-                const encrypted = encrypt.encrypt(link);
-                return encrypted || null;
-            } catch (error) {
-                console.error('Encryption error:', error);
-                return null;
-            }
-        }
-
-        // Function to generate HAPP encrypted links
-        function generateHappCryptLink(subscriptionUrl, version) {
-            if (!subscriptionUrl) {
-                console.warn('generateHappCryptLink: No subscriptionUrl provided');
-                return '';
-            }
-
-            const cryptoConfig = version === 3 ? HAPP_CRYPTO_V3 : HAPP_CRYPTO_V4;
-            console.log('Encrypting link for HAPP_CRYPT' + version + ':', subscriptionUrl);
-
-            const encrypted = encryptLink(subscriptionUrl, cryptoConfig.publicKey);
-
-            if (!encrypted) {
-                console.error('Failed to encrypt subscription link for HAPP_CRYPT' + version);
-                return '';
-            }
-
-            const result = cryptoConfig.deepLink + encodeURIComponent(encrypted);
-            console.log('Generated HAPP_CRYPT' + version + '_LINK:', result);
-            return result;
-        }
-
         // Initialize app
         document.addEventListener('DOMContentLoaded', initializeApp);
 
@@ -2847,14 +2771,8 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                 if (buttonLink && response) {
                     if (response.subscriptionUrl) {
                         buttonLink = buttonLink.replace(/\{\{SUBSCRIPTION_LINK\}\}/g, response.subscriptionUrl);
-
-                        // Generate encrypted HAPP links
-                        const happCrypt3Link = generateHappCryptLink(response.subscriptionUrl, 3);
-                        const happCrypt4Link = generateHappCryptLink(response.subscriptionUrl, 4);
-
-                        // Always replace variables, even if encryption failed
-                        buttonLink = buttonLink.replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, happCrypt3Link || response.subscriptionUrl);
-                        buttonLink = buttonLink.replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, happCrypt4Link || response.subscriptionUrl);
+                        buttonLink = buttonLink.replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, response.subscriptionUrl);
+                        buttonLink = buttonLink.replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, response.subscriptionUrl);
                     }
                     if (response.user?.username) {
                         buttonLink = buttonLink.replace(/\{\{USERNAME\}\}/g, response.user.username);
@@ -2881,15 +2799,9 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             if (!subscriptionUrl) return null;
             if (linkTemplate) {
                 let result = linkTemplate
-                    .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, subscriptionUrl);
-
-                // Generate encrypted HAPP links
-                const happCrypt3Link = generateHappCryptLink(subscriptionUrl, 3);
-                const happCrypt4Link = generateHappCryptLink(subscriptionUrl, 4);
-
-                // Always replace variables, even if encryption failed
-                result = result.replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, happCrypt3Link || subscriptionUrl);
-                result = result.replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, happCrypt4Link || subscriptionUrl);
+                    .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, subscriptionUrl)
+                    .replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, subscriptionUrl)
+                    .replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, subscriptionUrl);
 
                 const username = panelData?.response?.user?.username;
                 if (username) {
@@ -3234,24 +3146,7 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         }
 
         function openSubscriptionUrl(url) {
-            if (!url || url === '#') return;
-
-            const REDIRECT_BASE = 'https://legiz-ru.github.io/Orion/redirect-page/?redirect_to=';
-            const isInTelegram = window.Telegram?.WebApp?.initData;
-
-            let finalUrl = url;
-            if (isInTelegram) finalUrl = REDIRECT_BASE + encodeURIComponent(url);
-
-            try {
-                if (isInTelegram) {
-                    window.Telegram.WebApp.openLink(finalUrl);
-                } else {
-                    window.open(finalUrl, '_blank');
-                }
-            } catch (error) {
-                console.error('Failed to open subscription URL:', error);
-                window.open(finalUrl, '_blank');
-            }
+            openLink(url);
         }
 
         function openModal(id) { document.getElementById(id)?.classList.add('active'); }
