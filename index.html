@@ -1727,7 +1727,34 @@ body::before {
             tk: 'Türkmen'
         };
 
-        // HAPP encrypted subscription links (same keys as remnawave/subscription-page + @kastov/cryptohapp)
+        // ── remnawave/subscription-page: construct-subscription-url ──
+        function constructSubscriptionUrl(currentUrl, shortUuid) {
+            try {
+                const url = new URL(currentUrl);
+                url.search = '';
+                url.hash = '';
+                const segments = url.pathname.split('/').filter(Boolean);
+                const lastSegment = segments.length ? segments[segments.length - 1] : '';
+                if (lastSegment !== shortUuid) {
+                    if (segments.length) segments.pop();
+                    segments.push(shortUuid);
+                    url.pathname = '/' + segments.join('/');
+                }
+                return url.toString();
+            } catch {
+                return '';
+            }
+        }
+
+        function getSubscriptionMetaUrl() {
+            const shortUuid = panelData?.response?.user?.shortUuid;
+            if (!shortUuid) return panelData?.response?.subscriptionUrl || '';
+            return constructSubscriptionUrl(window.location.href, shortUuid)
+                || panelData?.response?.subscriptionUrl
+                || '';
+        }
+
+        // ── @kastov/cryptohapp (same as remnawave TemplateEngine) ──
         const HAPP_PUBLIC_KEY_V3 = `-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAlBetA0wjbaj+h7oJ/d/h
 pNrXvAcuhOdFGEFcfCxSWyLzWk4SAQ05gtaEGZyetTax2uqagi9HT6lapUSUe2S8
@@ -1758,26 +1785,95 @@ vHuEdc0d7vDmdw0oqCqWj0Xwq86HfORu6tm1A8uRATjb4SzjTKclKuoElVAVa5Jo
 oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
 -----END PUBLIC KEY-----`;
 
-        const HAPP_CRYPTO_V3 = { publicKey: HAPP_PUBLIC_KEY_V3, deepLink: 'happ://crypt3/' };
-        const HAPP_CRYPTO_V4 = { publicKey: HAPP_PUBLIC_KEY_V4, deepLink: 'happ://crypt4/' };
+        const HAPP_CRYPTO_CONFIGS = {
+            v3: { publicKey: HAPP_PUBLIC_KEY_V3, deepLink: 'happ://crypt3/' },
+            v4: { publicKey: HAPP_PUBLIC_KEY_V4, deepLink: 'happ://crypt4/' }
+        };
 
-        function encryptLink(link, publicKey) {
+        function createHappCryptoLink(content, version, asLink) {
             try {
+                const config = HAPP_CRYPTO_CONFIGS[version];
+                if (!config) return null;
                 const encrypt = new JSEncrypt();
-                encrypt.setPublicKey(publicKey);
-                return encrypt.encrypt(link) || null;
-            } catch (error) {
-                console.error('Encryption error:', error);
+                encrypt.setPublicKey(config.publicKey);
+                const encryptedContent = encrypt.encrypt(content);
+                if (!encryptedContent) return null;
+                if (asLink) return config.deepLink + encryptedContent;
+                return { deepLink: config.deepLink, encryptedContent };
+            } catch {
                 return null;
             }
         }
 
-        function generateHappCryptLink(subscriptionUrl, version) {
-            if (!subscriptionUrl) return '';
-            const cryptoConfig = version === 3 ? HAPP_CRYPTO_V3 : HAPP_CRYPTO_V4;
-            const encrypted = encryptLink(subscriptionUrl, cryptoConfig.publicKey);
-            if (!encrypted) return '';
-            return cryptoConfig.deepLink + encodeURIComponent(encrypted);
+        // ── remnawave/subscription-page: template-engine ──
+        function templateReplaceLazy(template, lazyValues) {
+            let hasReplacement = false;
+            const result = template.replace(/\{\{(\w+)\}\}/g, (match, key) => {
+                const value = lazyValues[key];
+                if (value !== undefined) {
+                    const resolved = typeof value === 'function' ? value() : value;
+                    if (resolved !== undefined) {
+                        hasReplacement = true;
+                        return String(resolved);
+                    }
+                }
+                return match;
+            });
+            return hasReplacement ? result : template;
+        }
+
+        function formatButtonLinkWithMetaInfo(template, metaInfo) {
+            return templateReplaceLazy(template, {
+                USERNAME: metaInfo.username,
+                SUBSCRIPTION_LINK: metaInfo.subscriptionUrl,
+                HAPP_CRYPT3_LINK: () => createHappCryptoLink(metaInfo.subscriptionUrl, 'v3', true) || 'unknown',
+                HAPP_CRYPT4_LINK: () => createHappCryptoLink(metaInfo.subscriptionUrl, 'v4', true) || 'unknown'
+            });
+        }
+
+        function normalizeGuideButtonType(type) {
+            if (type === 'subscription') return 'subscriptionLink';
+            if (type === 'copy') return 'copyButton';
+            return type || 'external';
+        }
+
+        // installation-guide.connector handleButtonClick
+        function handleGuideButtonClick(button) {
+            const buttonType = normalizeGuideButtonType(button.type);
+            const subscriptionUrl = getSubscriptionMetaUrl();
+            const username = panelData?.response?.user?.username || '';
+            let formattedUrl;
+
+            if (buttonType === 'subscriptionLink' || buttonType === 'copyButton') {
+                if (!button.link) return;
+                formattedUrl = formatButtonLinkWithMetaInfo(button.link, { subscriptionUrl, username });
+            }
+
+            switch (buttonType) {
+                case 'copyButton':
+                    if (!formattedUrl) return;
+                    copyToClipboard(formattedUrl);
+                    break;
+                case 'external':
+                    if (!button.link) return;
+                    openExternalButtonLink(button.link);
+                    break;
+                case 'subscriptionLink':
+                    if (!formattedUrl) return;
+                    openSubscriptionUrl(formattedUrl);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function openExternalButtonLink(url) {
+            try {
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('Failed to open external URL:', error);
+                openLink(url);
+            }
         }
 
         // Initialize app
@@ -2812,59 +2908,18 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
 
         function renderBlockButtons(block, app) {
             if (!block.buttons?.length) return '';
-            const { response } = panelData || {};
             let html = '';
 
-            block.buttons.forEach(button => {
+            block.buttons.forEach((button, index) => {
                 const buttonText = getLocalizedText(button.text);
                 const buttonIcon = getSvgIcon(button.svgIconKey, 'w-4 h-4');
-                const buttonType = button.type || 'external';
-                let buttonLink = button.link || '';
-
-                if (buttonLink && response?.subscriptionUrl) {
-                    const happCrypt3Link = generateHappCryptLink(response.subscriptionUrl, 3);
-                    const happCrypt4Link = generateHappCryptLink(response.subscriptionUrl, 4);
-
-                    buttonLink = buttonLink
-                        .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, response.subscriptionUrl)
-                        .replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, happCrypt3Link || response.subscriptionUrl)
-                        .replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, happCrypt4Link || response.subscriptionUrl);
-                }
-                if (buttonLink && response?.user?.username) {
-                    buttonLink = buttonLink.replace(/\{\{USERNAME\}\}/g, response.user.username);
-                }
-
-                if (buttonType === 'subscriptionLink' || buttonType === 'subscription') {
-                    const subscriptionUrl = generateSubscriptionUrl(response?.subscriptionUrl, button.link);
-                    if (subscriptionUrl) {
-                        html += `<button class="btn btn-primary" onclick="openSubscriptionUrl('${escapeForAttribute(subscriptionUrl)}')">${buttonIcon} ${buttonText}</button>`;
-                    }
-                } else if (buttonType === 'copyButton' || buttonType === 'copy') {
-                    html += `<button class="btn btn-primary" onclick="copyToClipboard('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
-                } else {
-                    html += `<button class="btn btn-primary" onclick="openLink('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
-                }
+                const blockKey = block.title ? JSON.stringify(block.title) : 'block';
+                const handlerName = `handleGuideButton_${Math.abs([blockKey, app?.name, index].join('|').split('').reduce((h, c) => ((h << 5) - h) + c.charCodeAt(0), 0))}`;
+                window[handlerName] = () => handleGuideButtonClick(button);
+                html += `<button type="button" class="btn btn-primary" onclick="${handlerName}()">${buttonIcon} ${buttonText}</button>`;
             });
 
             return html;
-        }
-
-        function generateSubscriptionUrl(subscriptionUrl, linkTemplate) {
-            if (!subscriptionUrl || !linkTemplate) return null;
-
-            const happCrypt3Link = generateHappCryptLink(subscriptionUrl, 3);
-            const happCrypt4Link = generateHappCryptLink(subscriptionUrl, 4);
-
-            let result = linkTemplate
-                .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, subscriptionUrl)
-                .replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, happCrypt3Link || subscriptionUrl)
-                .replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, happCrypt4Link || subscriptionUrl);
-
-            const username = panelData?.response?.user?.username;
-            if (username) {
-                result = result.replace(/\{\{USERNAME\}\}/g, username);
-            }
-            return result;
         }
 
         function goToTimelineStep(step) {
@@ -3202,25 +3257,21 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
 
         function openSubscriptionUrl(url) {
             if (!url || url === '#') return;
-
-            const isInTelegram = Boolean(window.Telegram?.WebApp?.initData);
             const isCustomScheme = /^[a-z][a-z0-9+.-]*:/i.test(url) && !/^https?:/i.test(url);
-
             try {
-                if (isInTelegram && isCustomScheme) {
-                    window.Telegram.WebApp.openLink(url);
-                } else if (isCustomScheme) {
-                    window.location.href = url;
-                } else {
-                    openLink(url);
-                }
-            } catch (error) {
-                console.error('Failed to open subscription URL:', error);
                 if (isCustomScheme) {
-                    window.location.href = url;
+                    if (window.Telegram?.WebApp?.openLink) {
+                        window.Telegram.WebApp.openLink(url);
+                    } else {
+                        window.location.href = url;
+                    }
                 } else {
                     window.open(url, '_blank');
                 }
+            } catch (error) {
+                console.error('Failed to open subscription URL:', error);
+                if (isCustomScheme) window.location.href = url;
+                else window.open(url, '_blank');
             }
         }
 
