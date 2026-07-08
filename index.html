@@ -1780,57 +1780,6 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             return cryptoConfig.deepLink + encodeURIComponent(encrypted);
         }
 
-        function getSubscriptionUrlForTemplates() {
-            const fromPanel = panelData?.response?.subscriptionUrl;
-            if (fromPanel) return fromPanel;
-            const shortUuid = panelData?.response?.user?.shortUuid;
-            if (!shortUuid) return null;
-            try {
-                const url = new URL(window.location.href);
-                url.search = '';
-                url.hash = '';
-                const segments = url.pathname.split('/').filter(Boolean);
-                if (segments.length) {
-                    if (segments[segments.length - 1] !== shortUuid) {
-                        segments[segments.length - 1] = shortUuid;
-                    }
-                    url.pathname = '/' + segments.join('/');
-                }
-                return url.toString();
-            } catch {
-                return null;
-            }
-        }
-
-        /** Same rules as remnawave/subscription-page TemplateEngine.formatWithMetaInfo */
-        function formatButtonLinkWithMetaInfo(linkTemplate) {
-            if (!linkTemplate) return null;
-            const subscriptionUrl = getSubscriptionUrlForTemplates();
-            if (!subscriptionUrl) return null;
-
-            const username = panelData?.response?.user?.username || '';
-            const happCrypt3Link = generateHappCryptLink(subscriptionUrl, 3) || 'unknown';
-            const happCrypt4Link = generateHappCryptLink(subscriptionUrl, 4) || 'unknown';
-
-            const lazyValues = {
-                SUBSCRIPTION_LINK: subscriptionUrl,
-                USERNAME: username,
-                HAPP_CRYPT3_LINK: happCrypt3Link,
-                HAPP_CRYPT4_LINK: happCrypt4Link
-            };
-
-            let hasReplacement = false;
-            const result = linkTemplate.replace(/\{\{(\w+)\}\}/g, (match, key) => {
-                if (lazyValues[key] !== undefined) {
-                    hasReplacement = true;
-                    return String(lazyValues[key]);
-                }
-                return match;
-            });
-
-            return hasReplacement ? result : linkTemplate;
-        }
-
         // Initialize app
         document.addEventListener('DOMContentLoaded', initializeApp);
 
@@ -2863,30 +2812,59 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
 
         function renderBlockButtons(block, app) {
             if (!block.buttons?.length) return '';
+            const { response } = panelData || {};
             let html = '';
 
             block.buttons.forEach(button => {
                 const buttonText = getLocalizedText(button.text);
                 const buttonIcon = getSvgIcon(button.svgIconKey, 'w-4 h-4');
                 const buttonType = button.type || 'external';
+                let buttonLink = button.link || '';
+
+                if (buttonLink && response?.subscriptionUrl) {
+                    const happCrypt3Link = generateHappCryptLink(response.subscriptionUrl, 3);
+                    const happCrypt4Link = generateHappCryptLink(response.subscriptionUrl, 4);
+
+                    buttonLink = buttonLink
+                        .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, response.subscriptionUrl)
+                        .replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, happCrypt3Link || response.subscriptionUrl)
+                        .replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, happCrypt4Link || response.subscriptionUrl);
+                }
+                if (buttonLink && response?.user?.username) {
+                    buttonLink = buttonLink.replace(/\{\{USERNAME\}\}/g, response.user.username);
+                }
 
                 if (buttonType === 'subscriptionLink' || buttonType === 'subscription') {
-                    const formattedUrl = formatButtonLinkWithMetaInfo(button.link);
-                    if (!formattedUrl) return;
-                    html += `<button class="btn btn-primary" onclick="openSubscriptionUrl('${escapeForAttribute(formattedUrl)}')">${buttonIcon} ${buttonText}</button>`;
+                    const subscriptionUrl = generateSubscriptionUrl(response?.subscriptionUrl, button.link);
+                    if (subscriptionUrl) {
+                        html += `<button class="btn btn-primary" onclick="openSubscriptionUrl('${escapeForAttribute(subscriptionUrl)}')">${buttonIcon} ${buttonText}</button>`;
+                    }
                 } else if (buttonType === 'copyButton' || buttonType === 'copy') {
-                    const formattedUrl = formatButtonLinkWithMetaInfo(button.link);
-                    if (!formattedUrl) return;
-                    html += `<button class="btn btn-primary" onclick="copyToClipboard('${escapeForAttribute(formattedUrl)}')">${buttonIcon} ${buttonText}</button>`;
+                    html += `<button class="btn btn-primary" onclick="copyToClipboard('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
                 } else {
-                    // external: raw link from RemnaWave config (no template engine)
-                    const externalLink = button.link || '';
-                    if (!externalLink) return;
-                    html += `<button class="btn btn-primary" onclick="openLink('${escapeForAttribute(externalLink)}')">${buttonIcon} ${buttonText}</button>`;
+                    html += `<button class="btn btn-primary" onclick="openLink('${escapeForAttribute(buttonLink)}')">${buttonIcon} ${buttonText}</button>`;
                 }
             });
 
             return html;
+        }
+
+        function generateSubscriptionUrl(subscriptionUrl, linkTemplate) {
+            if (!subscriptionUrl || !linkTemplate) return null;
+
+            const happCrypt3Link = generateHappCryptLink(subscriptionUrl, 3);
+            const happCrypt4Link = generateHappCryptLink(subscriptionUrl, 4);
+
+            let result = linkTemplate
+                .replace(/\{\{SUBSCRIPTION_LINK\}\}/g, subscriptionUrl)
+                .replace(/\{\{HAPP_CRYPT3_LINK\}\}/g, happCrypt3Link || subscriptionUrl)
+                .replace(/\{\{HAPP_CRYPT4_LINK\}\}/g, happCrypt4Link || subscriptionUrl);
+
+            const username = panelData?.response?.user?.username;
+            if (username) {
+                result = result.replace(/\{\{USERNAME\}\}/g, username);
+            }
+            return result;
         }
 
         function goToTimelineStep(step) {
@@ -3223,7 +3201,27 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         }
 
         function openSubscriptionUrl(url) {
-            openLink(url);
+            if (!url || url === '#') return;
+
+            const isInTelegram = Boolean(window.Telegram?.WebApp?.initData);
+            const isCustomScheme = /^[a-z][a-z0-9+.-]*:/i.test(url) && !/^https?:/i.test(url);
+
+            try {
+                if (isInTelegram && isCustomScheme) {
+                    window.Telegram.WebApp.openLink(url);
+                } else if (isCustomScheme) {
+                    window.location.href = url;
+                } else {
+                    openLink(url);
+                }
+            } catch (error) {
+                console.error('Failed to open subscription URL:', error);
+                if (isCustomScheme) {
+                    window.location.href = url;
+                } else {
+                    window.open(url, '_blank');
+                }
+            }
         }
 
         function openModal(id) { document.getElementById(id)?.classList.add('active'); }
