@@ -313,6 +313,18 @@
         container._warpCleanup = function() {
             cancelAnimationFrame(animId);
             window.removeEventListener('resize', resize);
+            // Free GL resources
+            if (gl) {
+                gl.deleteTexture(noiseTex);
+                gl.deleteBuffer(vbo);
+                if (program) {
+                    const shaders = gl.getAttachedShaders(program);
+                    if (shaders) shaders.forEach(function(s) { gl.detachShader(program, s); gl.deleteShader(s); });
+                    gl.deleteProgram(program);
+                }
+                const ext = gl.getExtension('WEBGL_lose_context');
+                if (ext) ext.loseContext();
+            }
             if (canvas.parentElement) canvas.parentElement.removeChild(canvas);
         };
     };
@@ -671,7 +683,7 @@ body::before {
 
 .card-header.clickable { cursor: pointer; transition: background 0.2s ease; }
 .card-header.clickable:hover { background: rgba(var(--primary-rgb), 0.04); }
-.dark-theme .card-header.clickable:hover { background: rgba(var(--primary-rgb), 0.06); }
+.color-mode-dark .card-header.clickable:hover { background: rgba(var(--primary-rgb), 0.06); }
 
 .card-content { padding: 20px; width: 100%; box-sizing: border-box; min-width: 0; overflow: hidden; }
 
@@ -748,8 +760,8 @@ body::before {
 .badge { padding: 4px 12px; border-radius: var(--radius-button); font-size: 12px; font-weight: 600; text-transform: uppercase; }
 .badge-active { background: rgba(110, 231, 183, 0.15); color: #6ee7b7; border: 1px solid rgba(110, 231, 183, 0.25); }
 .badge-disabled, .badge-limited, .badge-expired { background: rgba(252, 165, 165, 0.15); color: #fca5a5; border: 1px solid rgba(252, 165, 165, 0.25); }
-.dark-theme .badge-active { background: rgba(110, 231, 183, 0.1); color: #6ee7b7; }
-.dark-theme .badge-disabled, .dark-theme .badge-limited, .dark-theme .badge-expired { background: rgba(252, 165, 165, 0.1); color: #fca5a5; }
+.color-mode-dark .badge-active { background: rgba(110, 231, 183, 0.1); color: #6ee7b7; }
+.color-mode-dark .badge-disabled, .color-mode-dark .badge-limited, .color-mode-dark .badge-expired { background: rgba(252, 165, 165, 0.1); color: #fca5a5; }
 
 /* Links Section */
 .links-section { margin-bottom: 0; }
@@ -1048,7 +1060,7 @@ body::before {
     width: 100%;
 }
 .guides-accordion .accordion-header:hover { background: rgba(var(--primary-rgb), 0.04); }
-.dark-theme .guides-accordion .accordion-header:hover { background: rgba(var(--primary-rgb), 0.06); }
+.color-mode-dark .guides-accordion .accordion-header:hover { background: rgba(var(--primary-rgb), 0.06); }
 .guides-accordion .accordion-icon {
     width: 36px;
     height: 36px;
@@ -1433,7 +1445,7 @@ body::before {
     z-index: 9999;
     overflow: hidden;
 }
-.snowflake {
+.snowflake { will-change: transform;
     position: absolute;
     top: -20px;
     color: #a0c4e8;
@@ -1442,7 +1454,7 @@ body::before {
     animation: snowfall linear infinite;
     opacity: 0;
 }
-.dark-theme .snowflake {
+.color-mode-dark .snowflake { will-change: transform;
     color: #fff;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
 }
@@ -1691,6 +1703,7 @@ body::before {
         let currentApp = null;
         let toastTimeout = null;
         let validPlatforms = [];
+        let _warpObserver = null;
 
         // Hardcoded translations for "Days left"
         const daysLeftTranslations = {
@@ -2384,6 +2397,8 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
                         }
                     }
                 }, { threshold: 0.1 });
+                if (_warpObserver) _warpObserver.disconnect();
+                _warpObserver = obs;
                 obs.observe(warpCard);
             }
         }
@@ -2906,17 +2921,29 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             return html;
         }
 
+        const guideButtonHandlers = new Map();
+        let guideButtonHandlerSeq = 0;
+
+        function registerGuideButtonHandler(button) {
+            const id = `gbtn_${++guideButtonHandlerSeq}`;
+            guideButtonHandlers.set(id, button);
+            return id;
+        }
+
+        function handleGuideButtonClickById(handlerId) {
+            const button = guideButtonHandlers.get(handlerId);
+            if (button) handleGuideButtonClick(button);
+        }
+
         function renderBlockButtons(block, app) {
             if (!block.buttons?.length) return '';
             let html = '';
 
-            block.buttons.forEach((button, index) => {
+            block.buttons.forEach(button => {
                 const buttonText = getLocalizedText(button.text);
                 const buttonIcon = getSvgIcon(button.svgIconKey, 'w-4 h-4');
-                const blockKey = block.title ? JSON.stringify(block.title) : 'block';
-                const handlerName = `handleGuideButton_${Math.abs([blockKey, app?.name, index].join('|').split('').reduce((h, c) => ((h << 5) - h) + c.charCodeAt(0), 0))}`;
-                window[handlerName] = () => handleGuideButtonClick(button);
-                html += `<button type="button" class="btn btn-primary" onclick="${handlerName}()">${buttonIcon} ${buttonText}</button>`;
+                const handlerId = registerGuideButtonHandler(button);
+                html += `<button type="button" class="btn btn-primary" onclick="handleGuideButtonClickById('${handlerId}')">${buttonIcon} ${buttonText}</button>`;
             });
 
             return html;
@@ -3050,6 +3077,9 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         }
 
         function attachEventListeners() {
+            // Prevent duplicate resize listeners
+            window.removeEventListener('resize', checkTabsOverflow);
+
             // Platform tabs
             document.querySelectorAll('.platform-tab').forEach(tab => {
                 tab.addEventListener('click', (e) => {
@@ -3205,7 +3235,7 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
         }
 
         function showSubscriptionModal() {
-            const url = panelData?.response?.subscriptionUrl;
+            const url = getSubscriptionMetaUrl();
             if (!url) return;
 
             document.getElementById('subscriptionModalTitle').textContent = t('scanToImport') || 'Subscription Link';
@@ -3225,7 +3255,7 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
             openModal('subscriptionModal');
         }
 
-        function copySubscriptionUrl() { copyToClipboard(panelData?.response?.subscriptionUrl); }
+        function copySubscriptionUrl() { copyToClipboard(getSubscriptionMetaUrl() || panelData?.response?.subscriptionUrl); }
 
         function copyToClipboard(text) {
             if (!text) return;
@@ -3300,7 +3330,7 @@ oh/uZMozC65SmDw+N5p6Su8CAwEAAQ==
 
         function escapeForAttribute(text) {
             if (typeof text !== 'string') return '';
-            return text.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+            return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
         // Event listeners
